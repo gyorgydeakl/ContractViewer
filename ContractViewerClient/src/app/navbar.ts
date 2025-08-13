@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
-// PrimeNG (v20)
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -11,13 +9,11 @@ import type { MenuItem } from 'primeng/api';
   selector: 'app-navbar',
   imports: [MenubarModule, ButtonModule, DialogModule, RouterLink],
   template: `
-    <!-- Top nav -->
     <p-menubar
       [model]="items()"
       ariaLabel="Main navigation"
       class="bg-transparent text-primary-contrast border-none! rounded-none!"
     >
-      <!-- Brand / start -->
       <ng-template #start>
         <a routerLink="/" class="inline-flex items-center gap-2 font-semibold tracking-wide">
           <i class="pi pi-inbox" aria-hidden="true"></i>
@@ -26,7 +22,6 @@ import type { MenuItem } from 'primeng/api';
         </a>
       </ng-template>
 
-      <!-- End actions -->
       <ng-template #end>
         <p-button
           label="Cache Editor"
@@ -37,7 +32,6 @@ import type { MenuItem } from 'primeng/api';
       </ng-template>
     </p-menubar>
 
-    <!-- Cache Editor modal -->
     <p-dialog
       header="Cache Editor"
       [modal]="true"
@@ -57,10 +51,8 @@ import type { MenuItem } from 'primeng/api';
   }
 })
 export class Navbar {
-  // Modal state (signals, no mutation)
   readonly cacheEditorOpen = signal(false);
 
-  // Nav items (router-aware menu model)
   readonly items = signal<MenuItem[]>([
     { label: 'Home', routerLink: '/' },
     { label: 'Contracts', routerLink: '/contracts' },

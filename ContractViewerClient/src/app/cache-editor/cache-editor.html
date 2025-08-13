@@ -1,0 +1,93 @@
+@if (cache.isLoading()) {
+  <div class="flex items-center justify-center py-10">
+    <p-progress-spinner aria-label="Loading cache"></p-progress-spinner>
+  </div>
+} @else if (!cache.hasValue()) {
+  <div class="flex flex-col items-center gap-4 py-8">
+    <p class="text-lg">Failed to fetch cache</p>
+    <div class="flex gap-2">
+      <p-button label="Retry" icon="pi pi-refresh" (onClick)="reload()" />
+    </div>
+  </div>
+} @else {
+  <!-- Toast + confirm overlay -->
+  <p-confirmpopup />
+
+  <!-- Top actions -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+    <div class="flex items-center gap-2">
+      <p-button
+        label="Refresh"
+        icon="pi pi-refresh"
+        (onClick)="reload()"
+        [outlined]="true"
+      />
+      <p-button
+        label="Clear All"
+        icon="pi pi-trash"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="confirmClear($event)"
+      />
+    </div>
+
+    <!-- Search -->
+    <p-iconfield iconPosition="left" class="min-w-[16rem]">
+      <p-inputicon class="pi pi-search"></p-inputicon>
+      <input
+        type="text"
+        pInputText
+        [placeholder]="'Search key or value…'"
+        (input)="onQuery($event.target)"
+      />
+    </p-iconfield>
+  </div>
+
+  <!-- Cache table -->
+  <p-table
+    [value]="filteredRows()"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10,25,50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first}–{last} of {totalRecords}"
+    [tableStyle]="{ 'min-width': '40rem' }"
+  >
+    <ng-template #header>
+      <tr>
+        <th class="w-[28%]">Key</th>
+        <th>Value</th>
+        <th class="w-[1%]">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-row>
+      <tr>
+        <td class="align-top break-words">{{ row.key }}</td>
+        <td class="align-top break-words">
+          <pre class="whitespace-pre-wrap break-words font-mono text-sm m-0">{{ row.value }}</pre>
+        </td>
+        <td class="align-top">
+          <div class="flex items-center gap-2">
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              [text]="true"
+              aria-label="Delete"
+              (onClick)="confirmDelete($event, row.key)"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #footer>
+      <tr>
+        <td colspan="3">
+          <span class="text-sm opacity-80">Total: {{ filteredRows().length }}</span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+}

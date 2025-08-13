@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "api:generate": "openapi-generator-cli generate -c gen-config.yaml"
   },
   "prettier": {
     "overrides": [
@@ -46,6 +47,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "tailwindcss": "^4.1.11",
+    "@openapitools/openapi-generator-cli": "^2.21.4",
     "typescript": "~5.8.2"
   }
 }

@@ -11,7 +11,9 @@ import {InputText} from 'primeng/inputtext';
 import {TableModule} from 'primeng/table';
 
 type KV = { key: string; value: string };
-
+interface Cache {
+  [key:string]: string,
+}
 @Component({
   selector: 'app-cache-editor',
   imports: [
@@ -30,14 +32,14 @@ export class CacheEditor {
   private readonly msg = inject(MessageService);
   private readonly confirm = inject(ConfirmationService);
   private readonly client = inject(ContractViewerApiClient);
-  protected readonly cache = resourceObsNoParams<Map<string, string>>(() => this.client.getCache())
+  protected readonly cache = resourceObsNoParams<Cache>(() => this.client.getCache())
   private readonly query = signal<string>('');
 
   // derive rows from Map and apply search
   protected readonly rows = computed<KV[]>(() => {
     const m = this.cache.value();
     if (!m) return [];
-    return Array.from(m.entries())
+    return Array.from(Object.entries(m))
       .map(([key, value]) => ({ key, value }))
       .sort((a, b) => a.key.localeCompare(b.key));
   });

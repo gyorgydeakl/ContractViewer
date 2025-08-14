@@ -1,0 +1,82 @@
+<!-- Header: User ID + actions -->
+<div class="flex flex-wrap items-end gap-3 mb-4">
+  <div class="flex flex-col gap-2">
+    <label for="user-id" class="text-sm opacity-80">User ID</label>
+    <p-iconfield id="user-id" iconPosition="left" class="min-w-[18rem]">
+      <p-inputicon class="pi pi-user"></p-inputicon>
+      <input
+        type="text"
+        pInputText
+        [value]="userInput()"
+        placeholder="Enter user id…"
+        (input)="userInput.set(getHtmlInputElement($event).value)"
+        (keyup.enter)="applyUser()"
+      />
+    </p-iconfield>
+  </div>
+
+  <div class="flex gap-2">
+    <p-button label="Load" icon="pi pi-download" (onClick)="applyUser()" />
+    <p-button label="Refresh" icon="pi pi-refresh" [outlined]="true" (onClick)="reload()" />
+  </div>
+</div>
+
+@if (contracts.isLoading()) {
+  <div class="flex items-center justify-center py-10">
+    <p-progress-spinner aria-label="Loading contracts"></p-progress-spinner>
+  </div>
+} @else if (!contracts.hasValue()) {
+  <div class="flex flex-col items-center gap-4 py-10">
+    @if (!userId()) {
+      <p class="text-lg">Enter a user ID and click <b>Load</b> to fetch contracts.</p>
+    } @else {
+      <p class="text-lg">Failed to fetch contracts for <b>{{ userId() }}</b>.</p>
+      <p-button label="Retry" icon="pi pi-refresh" (onClick)="reload()" />
+    }
+  </div>
+} @else {
+  <!-- Search -->
+  <div class="flex items-center justify-between gap-3 mb-3">
+    <div class="text-sm opacity-75">Total: {{ filteredContracts().length }}</div>
+
+    <p-iconfield iconPosition="left" class="min-w-[18rem]">
+      <p-inputicon class="pi pi-search"></p-inputicon>
+      <input
+        type="text"
+        pInputText
+        placeholder="Search id, role, registration…"
+        (input)="onQuery(getHtmlInputElement($event).value)"
+      />
+    </p-iconfield>
+  </div>
+
+  <!-- Contracts table -->
+  <p-table
+    [value]="pagedContracts()"
+    [paginator]="true"
+    [rows]="rowsPerPage()"
+    [rowsPerPageOptions]="[10,25,50]"
+    [totalRecords]="filteredContracts().length"
+    [lazy]="true"
+    (onPage)="onPage($event)"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first}–{last} of {totalRecords}"
+    [tableStyle]="{ 'min-width': '48rem' }"
+  >
+    <ng-template #header>
+      <tr>
+        <th class="w-[34%]">Contract ID</th>
+        <th class="w-[22%]">Role</th>
+        <th>Registration Number</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-row>
+      <tr>
+        <td class="break-words">{{ row.contractId }}</td>
+        <td class="break-words">{{ row.role }}</td>
+        <td class="break-words">{{ row.registrationNumber }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+}

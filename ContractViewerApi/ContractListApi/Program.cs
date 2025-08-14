@@ -1,28 +1,16 @@
+using System.Net;
 using Common;
+using ContractListApi;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddAuthorization();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Loopback, Connection.Port));
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
+app.MapOpenApi();
 app.MapGet("user/{userId}/contracts", (string userId) => 
     User.GetByUserId(userId) is { } user ?
-        Results.Ok(user.Contracts) : 
+        Results.Ok(user.Contracts.Select(u => u.ToSummary())) : 
         Results.NotFound());
 
 app.Run();

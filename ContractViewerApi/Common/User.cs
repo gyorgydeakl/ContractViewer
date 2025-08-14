@@ -33,6 +33,8 @@ public class User
                 {
                     Id = "contract_123",
                     Name = "Contract 123",
+                    Role = "Contractor",
+                    RegistrationNumber = "123456789",
                     Documents =
                     [
                         new Document
@@ -55,6 +57,8 @@ public class User
                 {
                     Id = "contract_456",
                     Name = "Website Redesign",
+                    Role = "Contractor",
+                    RegistrationNumber = "987654321",
                     Documents =
                     [
                         new Document { Id = "doc_456", Name = "Wireframe.pdf" },
@@ -65,6 +69,8 @@ public class User
                 {
                     Id = "contract_789",
                     Name = "App Development",
+                    Role = "Developer",
+                    RegistrationNumber = "987654321",
                     Documents =
                     [
                         new Document { Id = "doc_458", Name = "UI_Mockup.png" }
@@ -83,6 +89,8 @@ public class User
                 {
                     Id = "contract_987",
                     Name = "Marketing Campaign",
+                    Role = "Marketer",
+                    RegistrationNumber = "987654321",
                     Documents =
                     [
                         new Document { Id = "doc_900", Name = "Plan.pdf" },
@@ -92,4 +100,17 @@ public class User
             ]
         },
     ];
+
+    public UserSummary ToSummary() =>
+        new()
+        {
+            Username = Username,
+            UserId = UserId
+        };
+}
+
+public class UserSummary
+{
+    public required string Username { get; init; }
+    public required string UserId { get; init; }
 }

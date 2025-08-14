@@ -1,23 +1,18 @@
+using System.Net;
 using Common;
+using ContractDetailsApi;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Loopback, Connection.Port));
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.MapOpenApi();
 
 app.UseHttpsRedirection();
 app.MapGet("contract/{contractId}", (string contractId) =>
         User.GetByContractId(contractId) is { } contract ?
-            Results.Ok(contract) :
+            Results.Ok(contract.ToDetailed()) :
             Results.NotFound())
     .WithName("GetWeatherForecast");
 

@@ -4,7 +4,6 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddAuthorization();
 builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
@@ -13,6 +12,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     options.AllowAdmin = true;
     return ConnectionMultiplexer.Connect(options);
 });
+builder.Services.AddHttpClient();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularDev",
@@ -25,14 +25,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+app.MapOpenApi();
+app.MapScalarApiReference();
 
-app.UseHttpsRedirection();
 app.UseCors("AllowAngularDev");
-app.UseAuthorization();
 app.MapAppEndpoints();
 app.Run();

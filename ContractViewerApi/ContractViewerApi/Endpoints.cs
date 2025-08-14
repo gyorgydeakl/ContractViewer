@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using StackExchange.Redis;
 
 namespace ContractViewerApi;
@@ -8,6 +8,7 @@ public static class Endpoints
     public static void MapAppEndpoints(this WebApplication app)
     {
         app.MapCacheEndpoints();
+        app.MapContractEndpoints();
     }
 
     private static void MapCacheEndpoints(this WebApplication app)
@@ -55,6 +56,53 @@ public static class Endpoints
         })
         .WithOpenApi()
         .WithName("ClearCache");
+    }
+
+    private static void MapContractEndpoints(this WebApplication app)
+    {
+        var contractDetails = new Dictionary<string, ContractDetails>()
+        {
+            { "123456789", new() { ContractId = "123456789", Role = "Contractor", RegistrationNumber = "123456789" } },
+            { "987654321", new() { ContractId = "987654321", Role = "Contractor", RegistrationNumber = "987654321" } },
+        };
+        var contracts = new List<ContractSummary>()
+        {
+            new() { ContractId = "123456789", Role = "Contractor", RegistrationNumber = "123456789" },
+            new() { ContractId = "987654321", Role = "Contractor", RegistrationNumber = "987654321" },
+        };
+        app.MapGet("user/{userId}/contracts", async (string userId, IConnectionMultiplexer redis) =>
+            {
+                var key = $"user/{userId}/contracts";
+                var db = redis.GetDatabase();
+                var contractCache = await db.StringGetAsync(key);
+                if (contractCache.HasValue)
+                {
+                    var result = JsonSerializer.Deserialize<List<ContractSummary>>(contractCache.ToString());
+                    return TypedResults.Ok(result);
+                }
+
+                await db.StringSetAsync(key, JsonSerializer.Serialize(contracts));
+                return TypedResults.Ok(contracts);
+            })
+            .WithOpenApi()
+            .WithName("GetContracts");
+
+        app.MapGet("contract/{contractId}", async (string contractId, IConnectionMultiplexer redis) =>
+        {
+            var key = $"contract/{contractId}";
+            var db = redis.GetDatabase();
+            var contractCache = db.StringGet(key);
+            if (contractCache.HasValue)
+            {
+                var result = JsonSerializer.Deserialize<ContractDetails>(contractCache.ToString());
+                return TypedResults.Ok(result);
+            }
+
+            await db.StringSetAsync(key, JsonSerializer.Serialize(contractDetails[contractId]));
+            return TypedResults.Ok(contractDetails[contractId]);
+        })
+        .WithOpenApi()
+        .WithName("GetContract");
     }
 }
 

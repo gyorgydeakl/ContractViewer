@@ -4,10 +4,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import type { MenuItem } from 'primeng/api';
+import {CacheEditor} from './cache-editor/cache-editor';
 
 @Component({
   selector: 'app-navbar',
-  imports: [MenubarModule, ButtonModule, DialogModule, RouterLink],
+  imports: [MenubarModule, ButtonModule, DialogModule, RouterLink, CacheEditor],
   template: `
     <p-menubar
       [model]="items()"
@@ -39,10 +40,10 @@ import type { MenuItem } from 'primeng/api';
       [resizable]="false"
       [visible]="cacheEditorOpen()"
       (visibleChange)="cacheEditorOpen.set($event)"
-      [style]="{ width: '70vw', maxWidth: '960px' }"
+      [style]="{ width: '70vw', maxWidth: '90%' }"
       [breakpoints]="{ '960px': '85vw', '640px': '95vw' }"
     >
-<!--      <app-cache-editor />-->
+      <app-cache-editor />
     </p-dialog>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -77,7 +77,7 @@ public static class Endpoints
                     $"{myEmail}/userId",
                     () => clientFactory.GetClient(Apis.User, ctx).GetAsync<string>("userId"));
                 var contracts = await redis.GetDatabase().TryGetDeserialized(
-                    $"{myUserId}/contracts", 
+                    $"user/{myUserId}/contracts", 
                     () => clientFactory.GetClient(Apis.ContractList).GetAsync<ContractSummary[]>($"user/{myUserId}/contracts"));
                 return TypedResults.Ok(contracts);
             })
@@ -113,6 +113,10 @@ public static class Endpoints
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
         var jsonResponse = await response.Content.ReadAsStringAsync();
+        if (jsonResponse is T tResponse)
+        {
+            return tResponse;
+        }
         return JsonSerializer.Deserialize<T>(jsonResponse) ?? throw new Exception("Could not deserialize response.");
     }
     

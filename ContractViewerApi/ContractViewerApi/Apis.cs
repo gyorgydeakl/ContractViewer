@@ -16,7 +16,12 @@ public static class ApisExtensions
 {
     public static void AddHttpClientForApi(this IServiceCollection services, Api api)
     {
-        services.AddHttpClient(api.Name, client => client.BaseAddress = new Uri($"http://localhost:{api.Port}"));
+        services
+            .AddHttpClient(api.Name, client => client.BaseAddress = new Uri($"http://localhost:{api.Port}"))
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                AllowAutoRedirect = false
+            }); ;
     }
     
     public static HttpClient GetClient(this IHttpClientFactory factory, Api api, HttpContext ctx)

@@ -44,6 +44,9 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo("C:/shared-keys")) 
+    .SetApplicationName("ContractViewerAuth");
 builder.Services
     .AddAuthentication(opt =>
     {
@@ -59,9 +62,6 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     options.AllowAdmin = true;
     return ConnectionMultiplexer.Connect(options);
 });
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("C:/shared-keys")) 
-    .SetApplicationName("ContractViewerAuth"); 
 builder.Services.AddHttpClientForApi(Apis.ContractDetails);
 builder.Services.AddHttpClientForApi(Apis.ContractList);
 builder.Services.AddHttpClientForApi(Apis.User);

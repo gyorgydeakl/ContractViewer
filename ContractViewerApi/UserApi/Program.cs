@@ -38,28 +38,7 @@ await IdentitySeeder.SeedAsync(app.Services);
 app.MapOpenApi();
 app.MapScalarApiReference();
 
-app.Use(async (ctx, next) =>
-{
-    Console.WriteLine($"[UserApi] Authorization header: '{ctx.Request.Headers["Authorization"].ToString()}'");
-    await next();
-});
-
 app.UseAuthentication();
-app.Use(async (ctx, next) =>
-{
-    
-    var result = await ctx.AuthenticateAsync(IdentityConstants.BearerScheme);
-    if (!result.Succeeded)
-    {
-        var failure = result.Failure?.Message ?? result.Failure?.ToString() ?? "unknown";
-        Console.WriteLine($"[UserApi] AuthenticateAsync failed: {failure}");
-    }
-    Console.WriteLine($"[UserApi] AuthenticateAsync success");
-
-    await next();
-
-});
-
 app.UseAuthorization();
 app.MapIdentityApi<User>();
 app.MapGet("userId", (HttpContext ctx, UserDbContext db) =>

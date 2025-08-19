@@ -1,17 +1,4 @@
-<div class="flex flex-wrap justify-between items-end gap-3 mb-4">
-  <h1 class="text-2xl font-bold opacity-80">Contracts for {{ auth.token() }}</h1>
-  <p-button label="Refresh" icon="pi pi-refresh" [outlined]="true" (onClick)="reload()"/>
-</div>
 
-@if (contracts.isLoading()) {
-  <div class="flex items-center justify-center py-10">
-    <p-progress-spinner aria-label="Loading contracts"></p-progress-spinner>
-  </div>
-} @else if (!contracts.hasValue()) {
-  <div class="flex flex-col items-center gap-4 py-10">
-    <p>Failed to fetch contracts</p>
-  </div>
-} @else {
   <!-- Search -->
   <div class="flex items-center justify-between gap-3 mb-3">
     <div class="text-sm opacity-75">Total: {{ filteredContracts().length }}</div>
@@ -25,8 +12,21 @@
         (input)="onQuery(getHtmlInputElement($event).value)"
       />
     </p-iconfield>
-  </div>
+    <div>
+      <p-button text icon="pi pi-refresh" (onClick)="contracts.reload()"></p-button>
+      <p-button text icon="pi pi-plus" (onClick)="generateContracts()"></p-button>
+    </div>
 
+  </div>
+@if (contracts.isLoading()) {
+  <div class="flex items-center justify-center py-10">
+    <p-progress-spinner aria-label="Loading contracts"></p-progress-spinner>
+  </div>
+} @else if (!contracts.hasValue()) {
+  <div class="flex flex-col items-center gap-4 py-10">
+    <p>Failed to fetch contracts</p>
+  </div>
+} @else {
   <!-- Contracts table -->
   <p-table
     [value]="pagedContracts()"

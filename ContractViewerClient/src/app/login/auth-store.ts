@@ -1,13 +1,24 @@
-import {Injectable, signal} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
+import {ContractViewerApiClient} from '../../client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthStore {
-  private readonly _token = signal<string | null>(null);
-  readonly token = this._token.asReadonly();
+  private readonly client = inject(ContractViewerApiClient);
 
-  setToken(id: string) {
-    this._token.set(id);
+  constructor() {
+    if (this.token()) {
+      this.client.configuration.credentials = { Bearer: this.token()! };
+    }
+  }
+
+  token() {
+    return localStorage.getItem("auth_token")
+  }
+
+  setToken(token: string) {
+    localStorage.setItem("auth_token", token)
+    this.client.configuration.credentials = { Bearer: token };
   }
 }

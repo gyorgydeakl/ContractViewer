@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
 import {ContractSummary, ContractViewerApiClient} from '../../client';
-import {resourceObs} from '../utils';
+import {resourceObs, resourceObsNoParams} from '../utils';
 import {TableModule} from 'primeng/table';
 import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
@@ -8,6 +8,8 @@ import {InputText} from 'primeng/inputtext';
 import {Button} from 'primeng/button';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {AuthStore} from '../login/auth-store';
+import {InputNumber} from 'primeng/inputnumber';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-contract-list',
@@ -17,7 +19,8 @@ import {AuthStore} from '../login/auth-store';
     InputIcon,
     InputText,
     Button,
-    ProgressSpinner
+    ProgressSpinner,
+    InputNumber
   ],
   templateUrl: './contract-list.html',
   styleUrl: './contract-list.css',
@@ -29,7 +32,8 @@ import {AuthStore} from '../login/auth-store';
 export class ContractList {
   private readonly client = inject(ContractViewerApiClient);
   protected readonly auth = inject(AuthStore);
-  protected readonly contracts = resourceObs(this.auth.token, (id) => this.client.getContracts());
+  protected readonly msg = inject(MessageService);
+  protected readonly contracts = resourceObsNoParams(() => this.client.getContracts());
 
   // local UI state
   private readonly query = signal<string>('');
@@ -75,5 +79,14 @@ export class ContractList {
 
   getHtmlInputElement($event: Event | null) {
     return $event?.target as HTMLInputElement;
+  }
+
+  generateContracts() {
+    this.client.generateRandomContracts({count: 5}).subscribe({
+      next: value => this.contracts.reload(),
+      error: error => this.msg.add({
+
+      })
+    })
   }
 }

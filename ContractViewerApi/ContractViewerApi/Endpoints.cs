@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
-using Common;
+using ContractListApi;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity.Data;
@@ -70,29 +70,43 @@ public static class Endpoints
 
     private static void MapContractEndpoints(this WebApplication app)
     {
+        app.MapPost("contracts/random", async (HttpContext ctx, [FromBody] GenerateContractRequest req, IHttpClientFactory clientFactory, IConnectionMultiplexer redis) =>
+        {
+            var myEmail = ctx.User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+            var myUserId = await redis.GetDatabase().TryGetDeserialized(
+                $"{myEmail}/userId",
+                () => clientFactory.GetClient(Apis.User, ctx).GetAsync<string>("userId"));
+            return await clientFactory
+                .GetClient(Apis.ContractList)
+                .PostAsync<GenerateContractRequest, ContractSummary[]>($"user/{myUserId}/contracts/random", req);
+        })
+        .RequireAuthorization()
+        .WithOpenApi()
+        .WithName("GenerateRandomContracts");
+        
         app.MapGet("contracts", async (HttpContext ctx, IHttpClientFactory clientFactory, IConnectionMultiplexer redis) =>
-            {
-                var myEmail = ctx.User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
-                var myUserId = await redis.GetDatabase().TryGetDeserialized(
-                    $"{myEmail}/userId",
-                    () => clientFactory.GetClient(Apis.User, ctx).GetAsync<string>("userId"));
-                var contracts = await redis.GetDatabase().TryGetDeserialized(
-                    $"user/{myUserId}/contracts", 
-                    () => clientFactory.GetClient(Apis.ContractList).GetAsync<ContractSummary[]>($"user/{myUserId}/contracts"));
-                return TypedResults.Ok(contracts);
-            })
-            .RequireAuthorization()
-            .WithOpenApi()
-            .WithName("GetContracts");
+        {
+            var myEmail = ctx.User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
+            var myUserId = await redis.GetDatabase().TryGetDeserialized(
+                $"{myEmail}/userId",
+                () => clientFactory.GetClient(Apis.User, ctx).GetAsync<string>("userId"));
+            var contracts = await redis.GetDatabase().TryGetDeserialized(
+                $"user/{myUserId}/contracts", 
+                () => clientFactory.GetClient(Apis.ContractList).GetAsync<ContractSummary[]>($"user/{myUserId}/contracts"));
+            return TypedResults.Ok(contracts);
+        })
+        .RequireAuthorization()
+        .WithOpenApi()
+        .WithName("GetContracts");
 
 
         app.MapGet("contract/{contractId}", async (string contractId, ContractDetailsService contractDetailsService) =>
-            {
-                var contractDetails = await contractDetailsService.GetContractDetailsAsync(contractId);
-                return TypedResults.Ok(contractDetails);
-            })
-            .WithOpenApi()
-            .WithName("GetContract");
+        {
+            var contractDetails = await contractDetailsService.GetContractDetailsAsync(contractId);
+            return TypedResults.Ok(contractDetails);
+        })
+        .WithOpenApi()
+        .WithName("GetContract");
     }
 
     public static void MapUserEndpoints(this WebApplication app)
@@ -117,12 +131,10 @@ public static class Endpoints
         {
             return tResponse;
         }
-        return JsonSerializer.Deserialize<T>(jsonResponse) ?? throw new Exception("Could not deserialize response.");
+        return JsonSerializer.Deserialize<T>(jsonResponse, JsonSerializerOptions.Web) ?? throw new Exception("Could not deserialize response.");
     }
     
     public static async Task<TRes> PostAsync<TReq, TRes>(this HttpClient client, string url, TReq body)
-    where TReq : class
-    where TRes : class
     {
         using var response = await client.PostAsJsonAsync(url, body);
         response.EnsureSuccessStatusCode();

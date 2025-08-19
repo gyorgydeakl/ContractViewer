@@ -11,6 +11,7 @@ index.ts
 model/accessTokenResponse.ts
 model/contractDetails.ts
 model/contractSummary.ts
+model/generateContractRequest.ts
 model/loginRequest.ts
 model/models.ts
 param.ts

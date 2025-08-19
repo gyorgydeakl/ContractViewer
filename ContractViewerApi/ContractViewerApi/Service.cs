@@ -1,4 +1,5 @@
 ﻿using Common;
+using ContractListApi;
 using StackExchange.Redis;
 
 namespace ContractViewerApi;

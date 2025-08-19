@@ -46,7 +46,6 @@ export class Login {
       .subscribe({
         next: token => {
           this.auth.setToken(token.accessToken);
-          this.client.configuration.credentials = { Bearer: token.accessToken };
           this.router.navigate(['contracts']);
         },
         error: (err: unknown) => {

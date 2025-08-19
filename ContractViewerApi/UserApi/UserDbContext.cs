@@ -4,10 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace UserApi;
 
-public class UserDbContext : IdentityDbContext<User, IdentityRole<string>, string>
+public class UserDbContext(DbContextOptions<UserDbContext> options) 
+    : IdentityDbContext<User, IdentityRole<string>, string>(options)
 {
-    public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

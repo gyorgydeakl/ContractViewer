@@ -8,13 +8,7 @@ public class Contract
     public required string RegistrationNumber { get; init; }
     
     public required List<Document> Documents { get; init; }
-
-    public ContractSummary ToSummary() => new()
-    {
-        ContractId = Id,
-        Role = Role,
-        RegistrationNumber = RegistrationNumber,
-    };
+    
 
     public ContractDetails ToDetailed() => new()
     {
@@ -22,13 +16,6 @@ public class Contract
         Role = Role,
         RegistrationNumber = RegistrationNumber,
     };
-}
-
-public class ContractSummary
-{
-    public required string ContractId { get; init; }
-    public required string Role { get; init; }
-    public required string RegistrationNumber { get; init; }
 }
 
 public class ContractDetails

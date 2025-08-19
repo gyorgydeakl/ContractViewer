@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContractDetailsApi", "Contr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{997694E6-84BF-4921-BF10-32A3EE62613C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentApi", "DocumentApi\DocumentApi.csproj", "{D5E9CDC5-E4CF-4C01-84D2-BBD2D61CB441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{997694E6-84BF-4921-BF10-32A3EE62613C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{997694E6-84BF-4921-BF10-32A3EE62613C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{997694E6-84BF-4921-BF10-32A3EE62613C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5E9CDC5-E4CF-4C01-84D2-BBD2D61CB441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5E9CDC5-E4CF-4C01-84D2-BBD2D61CB441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5E9CDC5-E4CF-4C01-84D2-BBD2D61CB441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5E9CDC5-E4CF-4C01-84D2-BBD2D61CB441}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

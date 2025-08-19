@@ -8,8 +8,10 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/accessTokenResponse.ts
 model/contractDetails.ts
 model/contractSummary.ts
+model/loginRequest.ts
 model/models.ts
 param.ts
 provide-api.ts

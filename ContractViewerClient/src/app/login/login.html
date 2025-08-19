@@ -1,0 +1,61 @@
+<div class="min-h-dvh flex items-center justify-center p-6">
+  <div class="w-full max-w-[28rem] rounded-xl shadow-lg bg-white/70 backdrop-blur p-6">
+    <h1 class="text-xl font-semibold text-center mb-6">Sign in</h1>
+
+    @if (error()) {
+      <p-message severity="error" class="mb-4">{{ error() }}</p-message>
+    }
+
+    <form (ngSubmit)="onLogin()" novalidate class="space-y-4">
+      <!-- Email -->
+      <div class="flex flex-col gap-1">
+        <label for="email" class="text-sm">Email</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          class="w-full"
+          name="email"
+          autocomplete="username"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          [invalid]="submitted() && !email().trim()"
+          required
+        />
+        @if (submitted() && !email().trim()) {
+          <p-message severity="error" size="small" variant="simple">Email is required</p-message>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="flex flex-col gap-1">
+        <label for="password" class="text-sm">Password</label>
+        <p-password
+          inputId="password"
+          name="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          [feedback]="false"
+          [toggleMask]="true"
+          autocomplete="current-password"
+          fluid
+          [invalid]="submitted() && !password().trim()"
+          required
+        />
+        @if (submitted() && !password().trim()) {
+          <p-message severity="error" size="small" variant="simple">Password is required</p-message>
+        }
+      </div>
+
+      <p-button
+        fluid
+        type="submit"
+        label="Sign in"
+        [disabled]="!canSubmit() || loading()"
+        [loading]="loading()"
+        icon="pi pi-sign-in"
+      >
+      </p-button>
+    </form>
+  </div>
+</div>

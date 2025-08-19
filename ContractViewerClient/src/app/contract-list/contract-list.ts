@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
 import {ContractSummary, ContractViewerApiClient} from '../../client';
 import {resourceObs} from '../utils';
 import {TableModule} from 'primeng/table';
@@ -7,6 +7,7 @@ import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
 import {Button} from 'primeng/button';
 import {ProgressSpinner} from 'primeng/progressspinner';
+import {AuthStore} from '../login/auth-store';
 
 @Component({
   selector: 'app-contract-list',
@@ -27,11 +28,8 @@ import {ProgressSpinner} from 'primeng/progressspinner';
 })
 export class ContractList {
   private readonly client = inject(ContractViewerApiClient);
-  protected readonly userId = signal<string>('');
-  protected readonly userInput = signal<string>('');
-
-  // server resource -> depends on userId
-  protected readonly contracts = resourceObs(this.userId, (id) => this.client.getContracts(id));
+  protected readonly auth = inject(AuthStore);
+  protected readonly contracts = resourceObs(this.auth.token, (id) => this.client.getContracts());
 
   // local UI state
   private readonly query = signal<string>('');
@@ -39,7 +37,12 @@ export class ContractList {
   protected readonly rowsPerPage = signal(10);
 
   // derived rows
-  private readonly allContracts = computed<ContractSummary[]>(() => this.contracts.value() ?? []);
+  private readonly allContracts = computed<ContractSummary[]>(() => {
+    if (!this.contracts.hasValue()) {
+      return [];
+    }
+    return this.contracts.value();
+  });
 
   protected readonly filteredContracts = computed<ContractSummary[]>(() => {
     const q = this.query().trim().toLowerCase();
@@ -55,16 +58,6 @@ export class ContractList {
     const start = this.pageIndex() * this.rowsPerPage();
     return this.filteredContracts().slice(start, start + this.rowsPerPage());
   });
-
-  // actions
-  protected applyUser() {
-    const id = this.userInput().trim();
-    if (id && id !== this.userId()) {
-      // reset paging when switching user
-      this.pageIndex.set(0);
-      this.userId.set(id);
-    }
-  }
 
   protected onQuery(v: string) {
     this.pageIndex.set(0);

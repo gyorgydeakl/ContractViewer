@@ -59,7 +59,7 @@ public class User
                     Name = "Website Redesign",
                     Role = "Contractor",
                     RegistrationNumber = "987654321",
-                    Documents =
+                     Documents =
                     [
                         new Document { Id = "doc_456", Name = "Wireframe.pdf" },
                         new Document { Id = "doc_457", Name = "Requirements.docx" }

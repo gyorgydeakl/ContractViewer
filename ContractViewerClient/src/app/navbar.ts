@@ -56,8 +56,9 @@ export class Navbar {
 
   readonly items = signal<MenuItem[]>([
     { label: 'Home', routerLink: '/' },
+    { label: 'Login', routerLink: '/login' },
     { label: 'Contracts', routerLink: '/contracts' },
-    { label: 'Documents', routerLink: '/documents' }
+    { label: 'Documents', routerLink: '/documents' },
   ]);
 
   openCacheEditor(): void {

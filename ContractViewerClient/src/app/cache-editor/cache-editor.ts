@@ -9,6 +9,7 @@ import {IconField} from 'primeng/iconfield';
 import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
 import {TableModule} from 'primeng/table';
+import {FormsModule} from '@angular/forms';
 
 type KV = { key: string; value: string };
 interface Cache {
@@ -23,7 +24,8 @@ interface Cache {
     IconField,
     InputIcon,
     InputText,
-    TableModule
+    TableModule,
+    FormsModule
   ],
   templateUrl: './cache-editor.html',
   styleUrl: './cache-editor.css'
@@ -32,31 +34,22 @@ export class CacheEditor {
   private readonly msg = inject(MessageService);
   private readonly confirm = inject(ConfirmationService);
   private readonly client = inject(ContractViewerApiClient);
+
   protected readonly cache = resourceObsNoParams<Cache>(() => this.client.getCache())
-  private readonly query = signal<string>('');
-
-  // derive rows from Map and apply search
-  protected readonly rows = computed<KV[]>(() => {
-    const m = this.cache.value();
-    if (!m) return [];
-    return Array.from(Object.entries(m))
-      .map(([key, value]) => ({ key, value }))
-      .sort((a, b) => a.key.localeCompare(b.key));
-  });
-
+  protected readonly query = signal<string>('');
   protected readonly filteredRows = computed<KV[]>(() => {
     const q = this.query().trim().toLowerCase();
     if (!q) return this.rows();
     return this.rows().filter(r => r.key.toLowerCase().includes(q) || r.value.toLowerCase().includes(q));
   });
 
-  protected onQuery(v: EventTarget | null) {
-    this.query.set((v as HTMLInputElement)?.value ?? '');
-  }
-
-  protected reload() {
-    this.cache.reload();
-  }
+  private readonly rows = computed<KV[]>(() => {
+    const m = this.cache.value();
+    if (!m) return [];
+    return Array.from(Object.entries(m))
+      .map(([key, value]) => ({ key, value }))
+      .sort((a, b) => a.key.localeCompare(b.key));
+  });
 
   protected clearCache() {
     this.client.clearCache().subscribe({

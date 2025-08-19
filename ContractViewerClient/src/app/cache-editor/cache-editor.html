@@ -6,7 +6,7 @@
   <div class="flex flex-col items-center gap-4 py-8">
     <p class="text-lg">Failed to fetch cache</p>
     <div class="flex gap-2">
-      <p-button label="Retry" icon="pi pi-refresh" (onClick)="reload()" />
+      <p-button label="Retry" icon="pi pi-refresh" (onClick)="cache.reload()" />
     </div>
   </div>
 } @else {
@@ -19,7 +19,7 @@
       <p-button
         label="Refresh"
         icon="pi pi-refresh"
-        (onClick)="reload()"
+        (onClick)="cache.reload()"
         [outlined]="true"
       />
       <p-button
@@ -38,7 +38,8 @@
         type="text"
         pInputText
         [placeholder]="'Search key or value…'"
-        (input)="onQuery($event.target)"
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
       />
     </p-iconfield>
   </div>

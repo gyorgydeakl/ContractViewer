@@ -1,4 +1,4 @@
-﻿using Common;
+﻿using ContractDetailsApi;
 using ContractListApi;
 using StackExchange.Redis;
 

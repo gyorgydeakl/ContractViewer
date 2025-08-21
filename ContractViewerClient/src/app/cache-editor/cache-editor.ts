@@ -10,6 +10,8 @@ import {InputIcon} from 'primeng/inputicon';
 import {InputText} from 'primeng/inputtext';
 import {TableModule} from 'primeng/table';
 import {FormsModule} from '@angular/forms';
+import {Dialog} from 'primeng/dialog';
+import {Tooltip} from 'primeng/tooltip';
 
 type KV = { key: string; value: string };
 interface Cache {
@@ -25,7 +27,9 @@ interface Cache {
     InputIcon,
     InputText,
     TableModule,
-    FormsModule
+    FormsModule,
+    Dialog,
+    Tooltip
   ],
   templateUrl: './cache-editor.html',
   styleUrl: './cache-editor.css'
@@ -95,5 +99,49 @@ export class CacheEditor {
       rejectButtonProps: { severity: 'secondary', text: true },
       accept: () => this.clearCache()
     });
+  }
+
+  reload() {
+    this.cache.reload();
+  }
+
+  protected readonly viewerOpen = signal(false);
+  protected readonly viewerTitle = signal('Viewer');
+  protected readonly viewerContent = signal('');
+  protected readonly viewerIsJson = signal(false);
+
+  protected openViewer(value: unknown, label: string) {
+    const { pretty, isJson } = this.formatForViewer(value);
+    this.viewerTitle.set(`${label}${isJson ? '' : ' (raw)'}`);
+    this.viewerContent.set(pretty);
+    this.viewerIsJson.set(isJson);
+    this.viewerOpen.set(true);
+  }
+
+  private formatForViewer(value: unknown): { pretty: string; isJson: boolean } {
+    // If it's a string, try to parse as JSON
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value);
+        return { pretty: JSON.stringify(parsed, null, 2), isJson: true };
+      } catch {
+        // Not JSON — show raw string
+        return { pretty: value, isJson: false };
+      }
+    }
+    // Non-string — pretty-print as JSON when possible
+    try {
+      return { pretty: JSON.stringify(value, null, 2), isJson: true };
+    } catch {
+      return { pretty: String(value), isJson: false };
+    }
+  }
+
+  protected async copyViewer() {
+    try {
+      await navigator.clipboard.writeText(this.viewerContent());
+    } catch {
+      // no-op; clipboard might be blocked
+    }
   }
 }

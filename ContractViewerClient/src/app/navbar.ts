@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal, viewChild} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
@@ -27,7 +27,7 @@ import {CacheEditor} from './cache-editor/cache-editor';
         <p-button
           label="Cache Editor"
           icon="pi pi-database"
-          (onClick)="openCacheEditor()"
+          (onClick)="openCacheEditor(true)"
           [rounded]="true"
         />
       </ng-template>
@@ -39,11 +39,11 @@ import {CacheEditor} from './cache-editor/cache-editor';
       [draggable]="false"
       [resizable]="false"
       [visible]="cacheEditorOpen()"
-      (visibleChange)="cacheEditorOpen.set($event)"
+      (visibleChange)="openCacheEditor($event)"
       [style]="{ width: '70vw', maxWidth: '90%' }"
       [breakpoints]="{ '960px': '85vw', '640px': '95vw' }"
     >
-      <app-cache-editor />
+      <app-cache-editor #cacheEditor/>
     </p-dialog>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +53,7 @@ import {CacheEditor} from './cache-editor/cache-editor';
 })
 export class Navbar {
   readonly cacheEditorOpen = signal(false);
+  readonly cacheEditor = viewChild.required<CacheEditor>("cacheEditor");
 
   readonly items = signal<MenuItem[]>([
     { label: 'Home', routerLink: '/' },
@@ -61,7 +62,10 @@ export class Navbar {
     { label: 'Documents', routerLink: '/documents' },
   ]);
 
-  openCacheEditor(): void {
-    this.cacheEditorOpen.set(true);
+  openCacheEditor(value: boolean) {
+    this.cacheEditorOpen.set(value);
+    if (value) {
+      this.cacheEditor().reload();
+    }
   }
 }

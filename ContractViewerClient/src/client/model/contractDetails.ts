@@ -10,8 +10,34 @@
 
 
 export interface ContractDetails { 
+    userId: string;
     contractId: string;
-    role: string;
+    name: string;
     registrationNumber: string;
+    role: string;
+    policyNumber?: string | null;
+    insuranceName?: string | null;
+    insuranceType?: string | null;
+    communicationChannel?: string | null;
+    billingMethod?: string | null;
+    startDate?: string | null;
+    anniversary?: string | null;
+    endDate?: string | null;
+    holderName?: string | null;
+    birthPlace?: string | null;
+    birthDate?: string | null;
+    mothersName?: string | null;
+    residenceAddress?: string | null;
+    mailingAddress?: string | null;
+    phoneNumber?: string | null;
+    email?: string | null;
+    annualPremium?: number | null;
+    installmentPremium?: number | null;
+    paymentFrequency?: string | null;
+    paymentMethod?: string | null;
+    lastPaymentDate?: string | null;
+    lastPaidAmount?: number | null;
+    nextDueDate?: string | null;
+    amountDue?: number | null;
 }
 

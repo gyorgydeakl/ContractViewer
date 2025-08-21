@@ -1,7 +1,9 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using Common;
 using ContractListApi;
+using DocumentApi;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity.Data;
@@ -17,6 +19,7 @@ public static class Endpoints
         app.MapCacheEndpoints();
         app.MapUserEndpoints();
         app.MapContractEndpoints();
+        app.MapDocumentEndpoints();
     }
 
     private static void MapCacheEndpoints(this WebApplication app)
@@ -53,15 +56,9 @@ public static class Endpoints
             .WithOpenApi()
             .WithName("DeleteCacheItem");
 
-        app.MapDelete("cache/clear", async (IConnectionMultiplexer mux) =>
+        app.MapDelete("cache/clear", async (IConnectionMultiplexer redis) =>
             {
-                const int dbNumber = 0;
-
-                foreach (var endpoint in mux.GetEndPoints())
-                {
-                    await mux.GetServer(endpoint).FlushDatabaseAsync(dbNumber);
-                }
-
+                await redis.ClearCacheAsync();
                 return TypedResults.NoContent();
             })
             .WithOpenApi()
@@ -76,9 +73,11 @@ public static class Endpoints
             var myUserId = await redis.GetDatabase().TryGetDeserialized(
                 $"{myEmail}/userId",
                 () => clientFactory.GetClient(Apis.User, ctx).GetAsync<string>("userId"));
-            return await clientFactory
+            var contracts = await clientFactory
                 .GetClient(Apis.ContractList)
                 .PostAsync<GenerateContractRequest, ContractSummary[]>($"user/{myUserId}/contracts/random", req);
+            await redis.ClearCacheAsync();
+            return contracts;
         })
         .RequireAuthorization()
         .WithOpenApi()
@@ -122,6 +121,31 @@ public static class Endpoints
         .WithName("Login");
     }
 
+    public static void MapDocumentEndpoints(this WebApplication app)
+    {
+        app.MapPost("documents/generate", 
+            async ([FromBody] GenerateDocumentRequest req, IHttpClientFactory clientFactory, IConnectionMultiplexer redis) =>
+            {
+                var docs = await clientFactory
+                    .GetClient(Apis.Document)
+                    .PostAsync<GenerateDocumentRequest, DocumentDto[]>("documents/generate", req);
+                await redis.ClearCacheAsync();
+                return docs;
+            })
+            .WithOpenApi()
+            .WithName("GenerateDocuments");
+        app.MapPost("documents",
+            ([FromQuery] string contracts, IHttpClientFactory clientFactory, IConnectionMultiplexer redis) =>
+            {
+                return redis.GetDatabase().TryGetDeserialized($"documents/{contracts}", () =>
+                    clientFactory
+                    .GetClient(Apis.Document)
+                    .GetAsync<DocumentDto[]>("documents?contracts=" + contracts));
+            })
+            .WithOpenApi()
+            .WithName("GetDocuments");
+    }
+
     public static async Task<T> GetAsync<T>(this HttpClient client, string url) where T : class
     {
         var response = await client.GetAsync(url);
@@ -141,6 +165,15 @@ public static class Endpoints
         var str = await response.Content.ReadAsStringAsync();
         var result = JsonSerializer.Deserialize<TRes>(str, JsonSerializerOptions.Web);
         return result ?? throw new InvalidOperationException("Could not deserialize response.");
+    }
+
+    public static async Task ClearCacheAsync(this IConnectionMultiplexer redis)
+    {
+        const int dbNumber = 0;
+        foreach (var endpoint in redis.GetEndPoints())
+        {
+            await redis.GetServer(endpoint).FlushDatabaseAsync(dbNumber);
+        }
     }
 }
 

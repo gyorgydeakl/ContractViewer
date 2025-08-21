@@ -1,0 +1,208 @@
+@if (contract.isLoading()) {
+  <div class="max-w-6xl mx-auto p-6">
+    <div class="flex items-center gap-3 mb-6">
+      <p-skeleton width="14rem" height="2rem"></p-skeleton>
+      <p-skeleton width="8rem" height="1.5rem"></p-skeleton>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <p-skeleton height="7rem"></p-skeleton>
+      <p-skeleton height="7rem"></p-skeleton>
+      <p-skeleton height="7rem"></p-skeleton>
+      <p-skeleton height="7rem"></p-skeleton>
+      <p-skeleton height="7rem"></p-skeleton>
+      <p-skeleton height="7rem"></p-skeleton>
+    </div>
+  </div>
+} @else if (!contract.hasValue()) {
+  <div class="max-w-3xl mx-auto p-6">
+    <p-message severity="warn" >Contract not found.</p-message>
+  </div>
+} @else {
+  @let c = contract.value();
+
+  <p-card class="max-w-6xl mx-auto my-6">
+    <ng-template pTemplate="header">
+      <div class="flex flex-wrap items-center justify-between gap-3 p-4">
+        <div>
+          <h2 class="text-2xl font-semibold leading-none">{{ c.name }}</h2>
+          <div class="mt-1 text-sm text-gray-500">
+            <span class="font-mono">#{{ c.contractId }}</span>
+            <span class="mx-2">•</span>
+            <span>User: <span class="font-mono">{{ c.userId }}</span></span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          @if (c.role)               { <p-tag value="{{ c.role }}"></p-tag> }
+          @if (c.insuranceType)      { <p-tag value="{{ c.insuranceType }}" severity="info"></p-tag> }
+          @if (c.billingMethod)      { <p-tag value="{{ c.billingMethod }}" severity="contrast"></p-tag> }
+          @if (c.paymentFrequency)   { <p-tag value="{{ c.paymentFrequency }}" severity="success"></p-tag> }
+          @if (c.paymentMethod)      { <p-tag value="{{ c.paymentMethod }}" severity="warn"></p-tag> }
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="p-4 md:p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- LEFT: Details -->
+        <section class="lg:col-span-2 space-y-8">
+
+          <!-- Contract section -->
+          <div>
+            <h3 class="text-sm font-medium uppercase tracking-wide text-gray-500 mb-3">Contract</h3>
+            <div class="rounded-2xl border p-4 md:p-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                <div>
+                  <div class="text-xs text-gray-500">Registration number</div>
+                  <div class="font-medium">{{ c.registrationNumber || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Policy number</div>
+                  <div class="font-medium">{{ c.policyNumber || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Insurance name</div>
+                  <div class="font-medium">{{ c.insuranceName || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Insurance type</div>
+                  <div class="font-medium">{{ c.insuranceType || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Communication channel</div>
+                  <div class="font-medium">{{ c.communicationChannel || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Role</div>
+                  <div class="font-medium">{{ c.role || '—' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Holder section -->
+          <div>
+            <h3 class="text-sm font-medium uppercase tracking-wide text-gray-500 mb-3">Holder</h3>
+            <div class="rounded-2xl border p-4 md:p-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                <div>
+                  <div class="text-xs text-gray-500">Name</div>
+                  <div class="font-medium">{{ c.holderName || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Email</div>
+                  <div class="font-medium break-all">{{ c.email || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Phone</div>
+                  <div class="font-medium">{{ c.phoneNumber || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Birth date</div>
+                  <div class="font-medium">
+                    {{ c.birthDate ? (c.birthDate | date:'mediumDate') : '—' }}
+                  </div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Birth place</div>
+                  <div class="font-medium">{{ c.birthPlace || '—' }}</div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Mother's name</div>
+                  <div class="font-medium">{{ c.mothersName || '—' }}</div>
+                </div>
+                <div class="md:col-span-2">
+                  <div class="text-xs text-gray-500">Residence address</div>
+                  <div class="font-medium break-words">{{ c.residenceAddress || '—' }}</div>
+                </div>
+                <div class="md:col-span-2">
+                  <div class="text-xs text-gray-500">Mailing address</div>
+                  <div class="font-medium break-words">{{ c.mailingAddress || '—' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates section -->
+          <div>
+            <h3 class="text-sm font-medium uppercase tracking-wide text-gray-500 mb-3">Dates</h3>
+            <div class="rounded-2xl border p-4 md:p-5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-3">
+                <div>
+                  <div class="text-xs text-gray-500">Start date</div>
+                  <div class="font-medium">
+                    {{ c.startDate ? (c.startDate | date:'mediumDate') : '—' }}
+                  </div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">Anniversary</div>
+                  <div class="font-medium">
+                    {{ c.anniversary ? (c.anniversary | date:'mediumDate') : '—' }}
+                  </div>
+                </div>
+                <div>
+                  <div class="text-xs text-gray-500">End date</div>
+                  <div class="font-medium">
+                    {{ c.endDate ? (c.endDate | date:'mediumDate') : '—' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- RIGHT: Billing & Payments -->
+        <aside class="lg:col-span-1 space-y-6">
+          <div class="rounded-2xl border p-5">
+            <div class="text-sm font-medium uppercase tracking-wide text-gray-500 mb-2">Amount due</div>
+            <div class="text-3xl font-semibold">
+              {{ c.amountDue != null ? (c.amountDue | number:'1.0-0') : '—' }}
+            </div>
+            <div class="mt-2 text-sm text-gray-500">
+              Next due: {{ c.nextDueDate ? (c.nextDueDate | date:'mediumDate') : '—' }}
+            </div>
+            <p-divider></p-divider>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="text-xs text-gray-500">Last payment</div>
+                <div class="font-medium">
+                  {{ c.lastPaymentDate ? (c.lastPaymentDate | date:'mediumDate') : '—' }}
+                </div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500">Last amount</div>
+                <div class="font-medium">
+                  {{ c.lastPaidAmount != null ? (c.lastPaidAmount | number:'1.0-0') : '—' }}
+                </div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500">Installment premium</div>
+                <div class="font-medium">
+                  {{ c.installmentPremium != null ? (c.installmentPremium | number:'1.0-0') : '—' }}
+                </div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500">Annual premium</div>
+                <div class="font-medium">
+                  {{ c.annualPremium != null ? (c.annualPremium | number:'1.0-0') : '—' }}
+                </div>
+              </div>
+            </div>
+            <p-divider></p-divider>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="text-xs text-gray-500">Payment method</div>
+                <div class="font-medium">{{ c.paymentMethod || '—' }}</div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500">Frequency</div>
+                <div class="font-medium">{{ c.paymentFrequency || '—' }}</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </p-card>
+}

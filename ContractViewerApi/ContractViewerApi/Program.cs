@@ -24,8 +24,7 @@ builder.Services.AddOpenApi(options =>
             Description = "JWT in the form: Bearer {token}"
         };
 
-        // Global security requirement (applies to ops unless [AllowAnonymous])
-        doc.SecurityRequirements ??= new List<OpenApiSecurityRequirement>();
+        doc.SecurityRequirements ??= [];
         doc.SecurityRequirements.Add(new OpenApiSecurityRequirement
         {
             {

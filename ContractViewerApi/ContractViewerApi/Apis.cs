@@ -1,6 +1,6 @@
-﻿using System.Net.Http.Headers;
+﻿namespace ContractViewerApi;
 
-namespace ContractViewerApi;
+public record Api(string Name, int Port);
 
 public class Apis
 {
@@ -10,34 +10,28 @@ public class Apis
     public static readonly Api Document = new(nameof(DocumentApi), DocumentApi.Connection.Port);
 }
 
-public record Api(string Name, int Port);
-
 public static class ApisExtensions
 {
     public static void AddHttpClientForApi(this IServiceCollection services, Api api)
     {
         services
             .AddHttpClient(api.Name, client => client.BaseAddress = new Uri($"http://localhost:{api.Port}"))
-            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-            {
-                AllowAutoRedirect = false
-            }); ;
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
     }
     
     public static HttpClient GetClient(this IHttpClientFactory factory, Api api, HttpContext ctx)
     {
         var client = factory.CreateClient(api.Name);
         var rawAuth = ctx.Request.Headers["Authorization"].ToString();
-        if (!string.IsNullOrWhiteSpace(rawAuth))
+        if (string.IsNullOrWhiteSpace(rawAuth))
         {
-            client.DefaultRequestHeaders.Remove("Authorization");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", rawAuth);
+            return client;
         }
+
+        client.DefaultRequestHeaders.Remove("Authorization");
+        client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", rawAuth);
         return client;
     }
     
-    public static HttpClient GetClient(this IHttpClientFactory factory, Api api)
-    {
-        return factory.CreateClient(api.Name);
-    }
+    public static HttpClient GetClient(this IHttpClientFactory factory, Api api) => factory.CreateClient(api.Name);
 }

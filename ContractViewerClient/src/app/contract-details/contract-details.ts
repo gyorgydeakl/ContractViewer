@@ -1,6 +1,6 @@
 import {Component, inject, input} from '@angular/core';
 import {resourceObs} from '../utils';
-import {ContractViewerApiClient} from '../../client';
+import {ContractViewerClient} from '../../client';
 import {Skeleton} from 'primeng/skeleton';
 import {Divider} from 'primeng/divider';
 import {DatePipe, DecimalPipe} from '@angular/common';
@@ -25,7 +25,7 @@ import {Message} from 'primeng/message';
   styleUrl: './contract-details.css'
 })
 export class ContractDetails {
-  private readonly client = inject(ContractViewerApiClient);
+  private readonly client = inject(ContractViewerClient);
   readonly contractId = input.required<string>();
 
   protected readonly contract = resourceObs(this.contractId, id => this.client.getContract(id));

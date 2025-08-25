@@ -1,6 +1,5 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {resourceObsNoParams} from '../utils';
-import {ContractViewerApiClient} from '../../client';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ConfirmPopup} from 'primeng/confirmpopup';
@@ -12,6 +11,7 @@ import {TableModule} from 'primeng/table';
 import {FormsModule} from '@angular/forms';
 import {Dialog} from 'primeng/dialog';
 import {Tooltip} from 'primeng/tooltip';
+import {ContractViewerClient} from '../../client';
 
 type KV = { key: string; value: string };
 interface Cache {
@@ -37,7 +37,7 @@ interface Cache {
 export class CacheEditor {
   private readonly msg = inject(MessageService);
   private readonly confirm = inject(ConfirmationService);
-  private readonly client = inject(ContractViewerApiClient);
+  private readonly client = inject(ContractViewerClient);
 
   protected readonly cache = resourceObsNoParams<Cache>(() => this.client.getCache())
   protected readonly query = signal<string>('');

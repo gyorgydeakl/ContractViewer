@@ -1,3 +1,3 @@
-export * from './contractViewerApi.client';
-import { ContractViewerApiClient } from './contractViewerApi.client';
-export const APIS = [ContractViewerApiClient];
+export * from './contractViewer.client';
+import { ContractViewerClient } from './contractViewer.client';
+export const APIS = [ContractViewerClient];

@@ -1,11 +1,11 @@
-import {inject, Injectable, signal} from '@angular/core';
-import {ContractViewerApiClient} from '../../client';
+import {inject, Injectable} from '@angular/core';
+import {ContractViewerClient} from '../../client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthStore {
-  private readonly client = inject(ContractViewerApiClient);
+  private readonly client = inject(ContractViewerClient);
 
   constructor() {
     if (this.token()) {

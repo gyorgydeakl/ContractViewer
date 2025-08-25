@@ -62,24 +62,17 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     options.AllowAdmin = true;
     return ConnectionMultiplexer.Connect(options);
 });
+
 builder.Services.AddHttpClientForApi(Apis.ContractDetails);
 builder.Services.AddHttpClientForApi(Apis.ContractList);
 builder.Services.AddHttpClientForApi(Apis.User);
 builder.Services.AddHttpClientForApi(Apis.Document);
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<ContractListService>();
-builder.Services.AddSingleton<ContractDetailsService>();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngularDev",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:4200")
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-});
+builder.Services.AddCors(options => 
+    options.AddPolicy("AllowAngularDev", policy =>
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
 
 var app = builder.Build();
 app.UseCors("AllowAngularDev");

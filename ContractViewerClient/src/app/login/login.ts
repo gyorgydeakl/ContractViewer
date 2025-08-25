@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import { ContractViewerApiClient } from '../../client';
+import {ContractViewerClient} from '../../client';
 import { AuthStore } from './auth-store';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
@@ -14,12 +14,12 @@ import { Message } from 'primeng/message';
   selector: 'app-login',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, InputText, Password, Button, Message, ButtonLabel],
+  imports: [FormsModule, InputText, Password, Button, Message],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
 export class Login {
-  private readonly client = inject(ContractViewerApiClient);
+  private readonly client = inject(ContractViewerClient);
   private readonly auth = inject(AuthStore);
   private readonly router = inject(Router);
 

@@ -16,7 +16,7 @@ public class UserDbContext(DbContextOptions<UserDbContext> options)
 public class User : IdentityUser;
 
 
-public static class IdentitySeeder
+public static partial class IdentitySeeder
 {
     public static async Task SeedAsync(IServiceProvider services)
     {
@@ -26,16 +26,7 @@ public static class IdentitySeeder
 
         await db.Database.MigrateAsync();
 
-        User[] users =
-        [
-            new() { Id = "user-1", UserName = "alice", Email = "alice@example.com", EmailConfirmed = true },
-            new() { Id = "user-2", UserName = "bob",   Email = "bob@example.com",   EmailConfirmed = true },
-            new() { Id = "user-3", UserName = "carol", Email = "carol@example.com", EmailConfirmed = true },
-            new() { Id = "user-4", UserName = "dave",  Email = "dave@example.com",  EmailConfirmed = true },
-            new() { Id = "user-5", UserName = "eve",   Email = "eve@example.com",   EmailConfirmed = true }
-        ];
-
-        foreach (var u in users)
+        foreach (var u in Users)
         {
             u.NormalizedUserName = userMgr.NormalizeName(u.UserName!);
             u.NormalizedEmail = userMgr.NormalizeEmail(u.Email!);

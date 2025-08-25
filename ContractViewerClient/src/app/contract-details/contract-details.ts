@@ -22,7 +22,6 @@ import {Message} from 'primeng/message';
     Message
   ],
   templateUrl: './contract-details.html',
-  styleUrl: './contract-details.css'
 })
 export class ContractDetails {
   private readonly client = inject(ContractViewerClient);

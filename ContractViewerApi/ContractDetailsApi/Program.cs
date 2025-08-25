@@ -15,10 +15,15 @@ var app = builder.Build();
 app.MapOpenApi();
 
 app.UseHttpsRedirection();
-app.MapGet("contract/{contractId}", (string contractId, ContractDbContext db) => db
-        .Set<Contract>()
-        .First(c => c.ContractId == contractId)
-        .ToDetails())
+app.MapGet("contract/{contractId}", (string contractId, ContractDbContext db) =>
+    {
+        Thread.Sleep(TimeSpan.FromSeconds(1));
+
+        return db
+            .Set<Contract>()
+            .First(c => c.ContractId == contractId)
+            .ToDetails();
+    })
     .WithName("GetContract");
 
 app.Run();

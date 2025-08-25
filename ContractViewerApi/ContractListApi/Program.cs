@@ -22,10 +22,14 @@ app.MapPost("user/{userId}/contracts/random", (string userId, [FromBody] Generat
     return contracts.Select(c => c.ToSummary()).ToList();
 });
 
-app.MapGet("user/{userId}/contracts", (string userId, ContractDbContext db) => db
-    .Set<Contract>()
-    .Where(c => c.UserId == userId)
-    .Select(c => c.ToSummary())
-    .ToList());
+app.MapGet("user/{userId}/contracts", (string userId, ContractDbContext db) =>
+{
+    Thread.Sleep(TimeSpan.FromSeconds(1));
+    return db
+        .Set<Contract>()
+        .Where(c => c.UserId == userId)
+        .Select(c => c.ToSummary())
+        .ToList();
+});
 
 app.Run();

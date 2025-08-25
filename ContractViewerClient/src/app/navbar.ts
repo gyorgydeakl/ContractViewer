@@ -56,7 +56,6 @@ export class Navbar {
   readonly cacheEditor = viewChild.required<CacheEditor>("cacheEditor");
 
   readonly items = signal<MenuItem[]>([
-    { label: 'Home', routerLink: '/' },
     { label: 'Login', routerLink: '/login' },
     { label: 'Contracts', routerLink: '/contracts' },
     { label: 'Documents', routerLink: '/documents' },

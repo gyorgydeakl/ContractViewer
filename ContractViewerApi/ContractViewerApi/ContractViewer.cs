@@ -127,6 +127,10 @@ public static class ContractViewer
 
     private static Task<DocumentDto[]> GetDocuments([FromQuery] string contracts, IHttpClientFactory clientFactory, IConnectionMultiplexer redis)
     {
+        if (string.IsNullOrWhiteSpace(contracts))
+        {
+            return Task.FromResult(Array.Empty<DocumentDto>());
+        }
         return redis.GetDatabase().TryGetDeserialized(
             $"documents/{contracts}",
             () => clientFactory.GetClient(Apis.Document).GetAsync<DocumentDto[]>("documents?contracts=" + contracts));

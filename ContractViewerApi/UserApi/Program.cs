@@ -43,6 +43,7 @@ app.UseAuthorization();
 app.MapIdentityApi<User>();
 app.MapGet("userId", (HttpContext ctx, UserDbContext db) =>
 {
+    Thread.Sleep(TimeSpan.FromSeconds(1));
     var email = ctx.User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
     return db.Set<User>().First(u => u.Email == email).Id;
 })

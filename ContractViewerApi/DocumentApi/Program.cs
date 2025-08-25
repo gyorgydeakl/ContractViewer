@@ -23,6 +23,7 @@ app.MapPost("documents/generate", ([FromBody] GenerateDocumentRequest req, Docum
 
 app.MapGet("documents", ([FromQuery] string contracts, DocumentDbContext db) =>
 {
+    Thread.Sleep(TimeSpan.FromSeconds(1));
     var contractIds = Uri.UnescapeDataString(contracts).Split(',');
     return db
         .Set<Document>()

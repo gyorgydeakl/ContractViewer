@@ -32,7 +32,6 @@ interface Cache {
     Tooltip
   ],
   templateUrl: './cache-editor.html',
-  styleUrl: './cache-editor.css'
 })
 export class CacheEditor {
   private readonly msg = inject(MessageService);

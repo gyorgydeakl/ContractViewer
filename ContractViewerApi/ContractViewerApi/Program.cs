@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi(options =>
 {
-    options.AddDocumentTransformer((doc, ctx, ct) =>
+    options.AddDocumentTransformer((doc, _, _) =>
     {
         doc.Components ??= new OpenApiComponents();
         doc.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
@@ -44,7 +44,7 @@ builder.Services.AddOpenApi(options =>
     });
 });
 builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo("C:/shared-keys")) 
+    .PersistKeysToFileSystem(new DirectoryInfo("/shared-keys"))
     .SetApplicationName("ContractViewerAuth");
 builder.Services
     .AddAuthentication(opt =>

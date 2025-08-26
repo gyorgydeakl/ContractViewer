@@ -2,7 +2,7 @@
 
 public record Api(string Name, int Port);
 
-public class Apis
+public static class Apis
 {
     public static readonly Api ContractList = new(nameof(ContractListApi), ContractListApi.Connection.Port);
     public static readonly Api ContractDetails = new(nameof(ContractDetailsApi), ContractDetailsApi.Connection.Port);

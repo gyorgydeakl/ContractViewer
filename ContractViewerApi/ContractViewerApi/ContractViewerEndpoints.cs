@@ -12,7 +12,7 @@ using StackExchange.Redis;
 
 namespace ContractViewerApi;
 
-public static class ContractViewer
+public static class ContractViewerEndpoints
 {
     public static void MapAppEndpoints(this WebApplication app)
     {
@@ -112,14 +112,15 @@ public static class ContractViewer
 
     private static Task<ContractDetails> GetContract(string contractId, IHttpClientFactory clientFactory, IConnectionMultiplexer redis)
     {
-        return redis.GetDatabase()
-            .TryGetDeserialized($"contract/{contractId}", async () => await clientFactory.GetClient(Apis.ContractDetails)
-                .GetAsync<ContractDetails>($"contract/{contractId}"));
+        return redis.GetDatabase().TryGetDeserialized(
+            $"contract/{contractId}",
+            () => clientFactory.GetClient(Apis.ContractDetails).GetAsync<ContractDetails>($"contract/{contractId}"));
     }
 
     private static async Task<DocumentDto[]> GenerateDocuments([FromBody] GenerateDocumentRequest req, IHttpClientFactory clientFactory, IConnectionMultiplexer redis)
     {
-        var docs = await clientFactory.GetClient(Apis.Document)
+        var docs = await clientFactory
+            .GetClient(Apis.Document)
             .PostAsync<GenerateDocumentRequest, DocumentDto[]>("documents/generate", req);
         await redis.ClearCacheAsync();
         return docs;
@@ -135,8 +136,11 @@ public static class ContractViewer
             $"documents/{contracts}",
             () => clientFactory.GetClient(Apis.Document).GetAsync<DocumentDto[]>("documents?contracts=" + contracts));
     }
+}
 
-    private static async Task<T> GetAsync<T>(this HttpClient client, string url) where T : class
+public static class ClientExtensions
+{
+    public static async Task<T> GetAsync<T>(this HttpClient client, string url) where T : class
     {
         var response = await client.GetAsync(url);
         response.EnsureSuccessStatusCode();
@@ -145,11 +149,11 @@ public static class ContractViewer
         {
             return tResponse;
         }
-        return JsonSerializer.Deserialize<T>(jsonResponse, JsonSerializerOptions.Web) ?? 
+        return JsonSerializer.Deserialize<T>(jsonResponse, JsonSerializerOptions.Web) ??
                throw new Exception("Could not deserialize response.");
     }
-    
-    private static async Task<TRes> PostAsync<TReq, TRes>(this HttpClient client, string url, TReq body)
+
+    public static async Task<TRes> PostAsync<TReq, TRes>(this HttpClient client, string url, TReq body)
     {
         using var response = await client.PostAsJsonAsync(url, body);
         response.EnsureSuccessStatusCode();
@@ -157,8 +161,36 @@ public static class ContractViewer
         var result = JsonSerializer.Deserialize<TRes>(str, JsonSerializerOptions.Web);
         return result ?? throw new InvalidOperationException("Could not deserialize response.");
     }
+}
 
-    private static async Task ClearCacheAsync(this IConnectionMultiplexer redis)
+public static class RedisExtensions
+{
+    /// <summary>
+    /// Attempts to retrieve a cached value from Redis and deserialize it into <typeparamref name="T"/>.
+    /// If the key is not found in the cache, the provided factory function is executed to produce the value,
+    /// which is then serialized and stored in Redis before being returned.
+    /// </summary>
+    /// <typeparam name="T">The reference type to deserialize the cached value into.</typeparam>
+    /// <param name="db">The Redis database instance.</param>
+    /// <param name="key">The cache key to look up.</param>
+    /// <param name="factory">An async factory function used to generate the value if the cache does not contain it.</param>
+    /// <returns>
+    /// The cached or newly generated instance of <typeparamref name="T"/>.
+    /// </returns>
+    public static async Task<T> TryGetDeserialized<T>(this IDatabase db, string key, Func<Task<T>> factory)
+        where T : class
+    {
+        var cacheResult = await db.StringGetAsync(key);
+        if (cacheResult.HasValue)
+        {
+            return JsonSerializer.Deserialize<T>(cacheResult!)!;
+        }
+
+        var result = await factory();
+        await db.StringSetAsync(key, JsonSerializer.Serialize(result));
+        return result;
+    }
+    public static async Task ClearCacheAsync(this IConnectionMultiplexer redis)
     {
         const int dbNumber = 0;
         foreach (var endpoint in redis.GetEndPoints())

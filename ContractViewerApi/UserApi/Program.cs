@@ -40,7 +40,7 @@ app.MapScalarApiReference();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapIdentityApi<User>();
+app.MapIdentityApi<User>(); // This built-in method adds the '/login' endpoint, with the preconfigured token generation so no need to implement it separately.
 app.MapGet("userId", (HttpContext ctx, UserDbContext db) =>
 {
     Thread.Sleep(TimeSpan.FromSeconds(1));

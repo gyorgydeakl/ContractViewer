@@ -7,7 +7,7 @@ import {ContractViewerClient} from '../../client';
 import { AuthStore } from './auth-store';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
-import {Button, ButtonLabel} from 'primeng/button';
+import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 
 @Component({

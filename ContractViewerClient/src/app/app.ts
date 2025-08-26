@@ -1,6 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {Button} from 'primeng/button';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 import {Navbar} from './navbar';
 import {Toast} from 'primeng/toast';
 
@@ -12,6 +11,7 @@ import {Toast} from 'primeng/toast';
     <router-outlet/>
     <p-toast />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
 

@@ -1,4 +1,4 @@
-import {Component, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
 import {resourceObsNoParams} from '../utils';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -32,6 +32,7 @@ interface Cache {
     Tooltip
   ],
   templateUrl: './cache-editor.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CacheEditor {
   private readonly msg = inject(MessageService);
@@ -39,7 +40,12 @@ export class CacheEditor {
   private readonly client = inject(ContractViewerClient);
 
   protected readonly cache = resourceObsNoParams<Cache>(() => this.client.getCache())
-  protected readonly query = signal<string>('');
+  protected readonly query = signal('');
+  protected readonly viewerOpen = signal(false);
+  protected readonly viewerTitle = signal('Viewer');
+  protected readonly viewerContent = signal('');
+  protected readonly viewerIsJson = signal(false);
+
   protected readonly filteredRows = computed<KV[]>(() => {
     const q = this.query().trim().toLowerCase();
     if (!q) return this.rows();
@@ -103,11 +109,6 @@ export class CacheEditor {
   reload() {
     this.cache.reload();
   }
-
-  protected readonly viewerOpen = signal(false);
-  protected readonly viewerTitle = signal('Viewer');
-  protected readonly viewerContent = signal('');
-  protected readonly viewerIsJson = signal(false);
 
   protected openViewer(value: unknown, label: string) {
     const { pretty, isJson } = this.formatForViewer(value);

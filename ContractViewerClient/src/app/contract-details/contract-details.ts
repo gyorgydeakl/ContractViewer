@@ -1,4 +1,4 @@
-import {Component, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {resourceObs} from '../utils';
 import {ContractViewerClient} from '../../client';
 import {Skeleton} from 'primeng/skeleton';
@@ -22,6 +22,7 @@ import {Message} from 'primeng/message';
     Message
   ],
   templateUrl: './contract-details.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractDetails {
   private readonly client = inject(ContractViewerClient);

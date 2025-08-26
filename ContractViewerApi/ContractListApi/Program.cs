@@ -24,7 +24,7 @@ app.MapPost("user/{userId}/contracts/random", (string userId, [FromBody] Generat
 
 app.MapGet("user/{userId}/contracts", (string userId, ContractDbContext db) =>
 {
-    Thread.Sleep(TimeSpan.FromSeconds(1));
+    Thread.Sleep(TimeSpan.FromSeconds(1)); // to simulate slow access to db
     return db
         .Set<Contract>()
         .Where(c => c.UserId == userId)

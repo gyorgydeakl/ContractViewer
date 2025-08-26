@@ -16,14 +16,13 @@ app.MapOpenApi();
 
 app.UseHttpsRedirection();
 app.MapGet("contract/{contractId}", (string contractId, ContractDbContext db) =>
-    {
-        Thread.Sleep(TimeSpan.FromSeconds(1));
+{
+    Thread.Sleep(TimeSpan.FromSeconds(1)); // to simulate slow access to db
 
-        return db
-            .Set<Contract>()
-            .First(c => c.ContractId == contractId)
-            .ToDetails();
-    })
-    .WithName("GetContract");
+    return db
+        .Set<Contract>()
+        .First(c => c.ContractId == contractId)
+        .ToDetails();
+});
 
 app.Run();

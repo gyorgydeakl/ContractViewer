@@ -1,7 +1,5 @@
 using System.Net;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,10 +38,10 @@ app.MapScalarApiReference();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapIdentityApi<User>(); // This built-in method adds the '/login' endpoint, with the preconfigured token generation so no need to implement it separately.
+app.MapIdentityApi<User>(); // This method adds the '/login' endpoint, with the preconfigured token generation so no need to implement it separately.
 app.MapGet("userId", (HttpContext ctx, UserDbContext db) =>
 {
-    Thread.Sleep(TimeSpan.FromSeconds(1));
+    Thread.Sleep(TimeSpan.FromSeconds(1)); // to simulate slow access to db
     var email = ctx.User.Claims.First(c => c.Type == ClaimTypes.Email).Value;
     return db.Set<User>().First(u => u.Email == email).Id;
 })

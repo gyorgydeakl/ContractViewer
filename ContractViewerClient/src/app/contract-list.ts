@@ -105,8 +105,8 @@ export class ContractList {
 
   protected readonly contracts = resourceObsNoParams(() => this.client.getContracts());
 
-  protected readonly allContracts = computed<ContractSummary[]>(
-    () => !this.contracts.hasValue() ? [] : this.contracts.value());
+  protected readonly allContracts = computed<ContractSummary[]>(() =>
+    this.contracts.hasValue() ? this.contracts.value() : []);
 
   protected openDetails(id: string) {
     this.selectedContractId.set(id);

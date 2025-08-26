@@ -16,7 +16,6 @@ import { Message } from 'primeng/message';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, InputText, Password, Button, Message],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
 })
 export class Login {
   private readonly client = inject(ContractViewerClient);

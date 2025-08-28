@@ -42,6 +42,4 @@ A dokumentumok a lekérdezésük után szintén bekerülnek a cache-be.
 Az adott user-hez dokumentumokat is lehet véletlenszerűen generálni. Ehhez, a '+' gombra kell rányomnunk a dokumentumok listázásakor.
 
 # Megjegyzések
-- Az alkalmazás mellékhatásként a gyökér mappában (windowson a C:\ mappában) létre fog hozni egy `shared-keys` nevű mappát. Ez szükséges ahhoz, hogy ugyanaz a token el legyen fogadva a központi API és a User API által is. Ezt a mappát az alkalmazás futtatása után szabadon törölhetjük
-
-- 
+Az alkalmazás mellékhatásként a gyökér mappában (windowson a C:\ mappában) létre fog hozni egy `shared-keys` nevű mappát. Ez szükséges ahhoz, hogy ugyanaz a token el legyen fogadva a központi API és a User API által is. Ezt a mappát az alkalmazás futtatása után szabadon törölhetjük

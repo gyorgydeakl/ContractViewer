@@ -1,0 +1,2 @@
+user default on >S3cureP@ss ~* &* +@all
+user contractViewerTenant on >passA ~contractViewerTenant:* +@all -@dangerous -@admin

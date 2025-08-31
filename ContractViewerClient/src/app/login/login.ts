@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
-import {ContractViewerClient} from '../../client';
+import {ContractViewerClient} from '../../contract-viewer-client';
 import { AuthStore } from './auth-store';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';

@@ -1,6 +1,7 @@
 generatorName: typescript-angular
 inputSpec: http://localhost:5000/openapi/v1.json
-outputDir: src/client
+outputDir: src/contract-viewer-client
+
 additionalProperties:
   ngVersion: 20
   providedInRoot: true

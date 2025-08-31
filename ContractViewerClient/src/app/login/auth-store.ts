@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {ContractViewerClient} from '../../client';
+import {ContractViewerClient} from '../../contract-viewer-client';
 
 @Injectable({
   providedIn: 'root'

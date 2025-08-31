@@ -5,7 +5,7 @@ import {ProgressSpinner} from 'primeng/progressspinner';
 import {MessageService} from 'primeng/api';
 import {Dialog} from 'primeng/dialog';
 import {ContractDetails} from './contract-details/contract-details';
-import {ContractSummary, ContractViewerClient} from '../client';
+import {ContractSummary, ContractViewerClient} from '../contract-viewer-client';
 import {resourceObsNoParams} from './utils';
 
 @Component({

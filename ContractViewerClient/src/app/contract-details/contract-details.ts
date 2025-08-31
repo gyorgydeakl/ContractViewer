@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {resourceObs} from '../utils';
-import {ContractViewerClient} from '../../client';
+import {ContractViewerClient} from '../../contract-viewer-client';
 import {Skeleton} from 'primeng/skeleton';
 import {Divider} from 'primeng/divider';
 import {DatePipe, DecimalPipe} from '@angular/common';

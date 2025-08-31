@@ -11,7 +11,7 @@ import {TableModule} from 'primeng/table';
 import {FormsModule} from '@angular/forms';
 import {Dialog} from 'primeng/dialog';
 import {Tooltip} from 'primeng/tooltip';
-import {ContractViewerClient} from '../../client';
+import {ContractViewerClient} from '../../contract-viewer-client';
 
 type KV = { key: string; value: string };
 interface Cache {

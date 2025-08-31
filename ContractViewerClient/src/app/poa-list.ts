@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
-import { ContractViewerClient, PowerOfAttorneyDto, GeneratePoaRequest } from '../client';
+import { ContractViewerClient, PowerOfAttorneyDto, GeneratePoaRequest } from '../contract-viewer-client';
 import { MessageService } from 'primeng/api';
 import { resourceObsNoParams } from './utils';
 import {firstValueFrom} from 'rxjs';

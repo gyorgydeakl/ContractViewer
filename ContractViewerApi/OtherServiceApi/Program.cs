@@ -1,8 +1,10 @@
+using System.Net;
 using Common;
+using OtherServiceApi;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Loopback, Connection.Port));
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
 {

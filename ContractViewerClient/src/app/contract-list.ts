@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { Button } from 'primeng/button';
-import { ProgressSpinner } from 'primeng/progressspinner';
-import { MessageService } from 'primeng/api';
-import { Dialog } from 'primeng/dialog';
+import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {TableModule} from 'primeng/table';
+import {Button} from 'primeng/button';
+import {ProgressSpinner} from 'primeng/progressspinner';
+import {MessageService} from 'primeng/api';
+import {Dialog} from 'primeng/dialog';
 import {ContractDetails} from './contract-details/contract-details';
 import {ContractSummary, ContractViewerClient} from '../client';
 import {resourceObsNoParams} from './utils';
@@ -120,3 +120,5 @@ export class ContractList {
     });
   }
 }
+
+

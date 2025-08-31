@@ -11,11 +11,12 @@ index.ts
 model/accessTokenResponse.ts
 model/contractDetails.ts
 model/contractSummary.ts
-model/documentDto.ts
 model/generateContractRequest.ts
-model/generateDocumentRequest.ts
+model/generatePoaRequest.ts
 model/loginRequest.ts
 model/models.ts
+model/powerOfAttorneyDto.ts
+model/user.ts
 param.ts
 provide-api.ts
 variables.ts

@@ -7,7 +7,7 @@ public static class Apis
     public static readonly Api ContractList = new(nameof(ContractListApi), ContractListApi.Connection.Port);
     public static readonly Api ContractDetails = new(nameof(ContractDetailsApi), ContractDetailsApi.Connection.Port);
     public static readonly Api User = new(nameof(UserApi), UserApi.Connection.Port);
-    public static readonly Api Document = new(nameof(DocumentApi), DocumentApi.Connection.Port);
+    public static readonly Api Poa = new(nameof(PowerOfAttorneyApi), PowerOfAttorneyApi.Connection.Port);
 }
 
 public static class ApisExtensions

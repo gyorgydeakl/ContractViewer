@@ -23,13 +23,15 @@ import { ContractDetails } from '../model/contractDetails';
 // @ts-ignore
 import { ContractSummary } from '../model/contractSummary';
 // @ts-ignore
-import { DocumentDto } from '../model/documentDto';
-// @ts-ignore
 import { GenerateContractRequest } from '../model/generateContractRequest';
 // @ts-ignore
-import { GenerateDocumentRequest } from '../model/generateDocumentRequest';
+import { GeneratePoaRequest } from '../model/generatePoaRequest';
 // @ts-ignore
 import { LoginRequest } from '../model/loginRequest';
+// @ts-ignore
+import { PowerOfAttorneyDto } from '../model/powerOfAttorneyDto';
+// @ts-ignore
+import { User } from '../model/user';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -220,16 +222,16 @@ export class ContractViewerClient extends BaseService {
     }
 
     /**
-     * @param generateDocumentRequest 
+     * @param generatePoaRequest 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public generateDocuments(generateDocumentRequest: GenerateDocumentRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<DocumentDto>>;
-    public generateDocuments(generateDocumentRequest: GenerateDocumentRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<DocumentDto>>>;
-    public generateDocuments(generateDocumentRequest: GenerateDocumentRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<DocumentDto>>>;
-    public generateDocuments(generateDocumentRequest: GenerateDocumentRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (generateDocumentRequest === null || generateDocumentRequest === undefined) {
-            throw new Error('Required parameter generateDocumentRequest was null or undefined when calling generateDocuments.');
+    public generatePoas(generatePoaRequest: GeneratePoaRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<PowerOfAttorneyDto>>;
+    public generatePoas(generatePoaRequest: GeneratePoaRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<PowerOfAttorneyDto>>>;
+    public generatePoas(generatePoaRequest: GeneratePoaRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<PowerOfAttorneyDto>>>;
+    public generatePoas(generatePoaRequest: GeneratePoaRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (generatePoaRequest === null || generatePoaRequest === undefined) {
+            throw new Error('Required parameter generatePoaRequest was null or undefined when calling generatePoas.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -269,12 +271,12 @@ export class ContractViewerClient extends BaseService {
             }
         }
 
-        let localVarPath = `/documents/generate`;
+        let localVarPath = `/poas/generate`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<Array<DocumentDto>>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<Array<PowerOfAttorneyDto>>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: generateDocumentRequest,
+                body: generatePoaRequest,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,
@@ -445,21 +447,13 @@ export class ContractViewerClient extends BaseService {
     }
 
     /**
-     * @param contracts 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getDocuments(contracts: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<DocumentDto>>;
-    public getDocuments(contracts: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<DocumentDto>>>;
-    public getDocuments(contracts: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<DocumentDto>>>;
-    public getDocuments(contracts: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (contracts === null || contracts === undefined) {
-            throw new Error('Required parameter contracts was null or undefined when calling getDocuments.');
-        }
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-          <any>contracts, 'contracts');
+    public getPoasGrantedByMe(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<PowerOfAttorneyDto>>;
+    public getPoasGrantedByMe(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<PowerOfAttorneyDto>>>;
+    public getPoasGrantedByMe(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<PowerOfAttorneyDto>>>;
+    public getPoasGrantedByMe(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -489,12 +483,115 @@ export class ContractViewerClient extends BaseService {
             }
         }
 
-        let localVarPath = `/documents`;
+        let localVarPath = `/poasGrantedByMe`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<Array<DocumentDto>>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<Array<PowerOfAttorneyDto>>('get', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getPoasGrantedForMe(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<PowerOfAttorneyDto>>;
+    public getPoasGrantedForMe(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<PowerOfAttorneyDto>>>;
+    public getPoasGrantedForMe(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<PowerOfAttorneyDto>>>;
+    public getPoasGrantedForMe(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/poasGrantedForMe`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<Array<PowerOfAttorneyDto>>('get', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                responseType: <any>responseType_,
+                ...(withCredentials ? { withCredentials } : {}),
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getUsers(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<User>>;
+    public getUsers(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<User>>>;
+    public getUsers(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<User>>>;
+    public getUsers(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+
+        let localVarHeaders = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        localVarHeaders = this.configuration.addCredentialToHeaders('Bearer', 'Authorization', localVarHeaders, 'Bearer ');
+
+        const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
+        ]);
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        const localVarHttpContext: HttpContext = options?.context ?? new HttpContext();
+
+        const localVarTransferCache: boolean = options?.transferCache ?? true;
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/users`;
+        const { basePath, withCredentials } = this.configuration;
+        return this.httpClient.request<Array<User>>('post', `${basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
                 responseType: <any>responseType_,
                 ...(withCredentials ? { withCredentials } : {}),
                 headers: localVarHeaders,

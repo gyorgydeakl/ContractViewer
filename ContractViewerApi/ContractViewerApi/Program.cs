@@ -1,3 +1,4 @@
+ using Common;
  using ContractViewerApi;
  using Microsoft.AspNetCore.DataProtection;
  using Microsoft.AspNetCore.Identity;
@@ -57,15 +58,22 @@ builder.Services
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
 {
-    var options = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("RedisCache")!);
-    options.AllowAdmin = true;
-    return ConnectionMultiplexer.Connect(options);
+    var connectionString = builder.Configuration.GetConnectionString("RedisCache")!;
+    return ConnectionMultiplexer.Connect(connectionString);
 });
-
+builder.Services.AddSingleton<RedisTenantContext>(sp =>
+{
+    var username = sp.GetRequiredService<IConnectionMultiplexer>()
+        .GetDatabase()
+        .Execute("ACL", "WHOAMI")
+        .ToString()
+        .Trim();
+    return new RedisTenantContext(username, $"{username}:");
+});
 builder.Services.AddHttpClientForApi(Apis.ContractDetails);
 builder.Services.AddHttpClientForApi(Apis.ContractList);
 builder.Services.AddHttpClientForApi(Apis.User);
-builder.Services.AddHttpClientForApi(Apis.Document);
+builder.Services.AddHttpClientForApi(Apis.Poa);
 
 builder.Services.AddCors(options => 
     options.AddPolicy("AllowAngularDev", policy =>

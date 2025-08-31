@@ -6,20 +6,17 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="35.6.3" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
         <PackageReference Include="Scalar.AspNetCore" Version="2.6.9" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.58" />
     </ItemGroup>
 
+
     <ItemGroup>
       <ProjectReference Include="..\Common\Common.csproj" />
-      <ProjectReference Include="..\ContractDetailsApi\ContractDetailsApi.csproj" />
-      <ProjectReference Include="..\ContractListApi\ContractListApi.csproj" />
-      <ProjectReference Include="..\PowerOfAttorneyApi\PowerOfAttorneyApi.csproj" />
-      <ProjectReference Include="..\UserApi\UserApi.csproj" />
     </ItemGroup>
+
 
 </Project>

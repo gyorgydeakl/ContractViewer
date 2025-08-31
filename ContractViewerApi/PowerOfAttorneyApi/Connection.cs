@@ -1,4 +1,4 @@
-﻿namespace DocumentApi;
+﻿namespace PowerOfAttorneyApi;
 
 public static class Connection
 {

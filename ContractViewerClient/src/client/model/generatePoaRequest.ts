@@ -9,8 +9,9 @@
  */
 
 
-export interface GenerateDocumentRequest { 
+export interface GeneratePoaRequest { 
     contractIds: Array<string>;
+    userIds: Array<string>;
     count: number;
 }
 

@@ -46,6 +46,12 @@ app.MapGet("userId", (HttpContext ctx, UserDbContext db) =>
     return db.Set<User>().First(u => u.Email == email).Id;
 })
 .RequireAuthorization();
+    
+app.MapGet("users", (UserDbContext db) =>
+{
+    Thread.Sleep(TimeSpan.FromSeconds(1)); // to simulate slow access to db
+    return db.Set<User>().ToList();
+});
 app.Run();
 
 

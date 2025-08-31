@@ -18,7 +18,7 @@ interface Cache {
   [key:string]: string,
 }
 @Component({
-  selector: 'app-cache-editor',
+  selector: 'app-cache-viewer',
   imports: [
     ProgressSpinner,
     ConfirmPopup,
@@ -31,10 +31,10 @@ interface Cache {
     Dialog,
     Tooltip
   ],
-  templateUrl: './cache-editor.html',
+  templateUrl: './cache-viewer.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CacheEditor {
+export class CacheViewer {
   private readonly msg = inject(MessageService);
   private readonly confirm = inject(ConfirmationService);
   private readonly client = inject(ContractViewerClient);

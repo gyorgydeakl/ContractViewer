@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
-public static class Cache
+namespace OtherServiceApi;
+
+public static class OtherService
 {
     public static void MapCacheEndpoints(this WebApplication app)
     {
         app.MapGet("cache", GetCache).WithOpenApi().WithName(nameof(GetCache));
+        app.MapPost("cache", AddCacheItem).WithOpenApi().WithName(nameof(AddCacheItem));
         app.MapDelete("cache/{key}", DeleteCacheItem).WithOpenApi().WithName(nameof(DeleteCacheItem));
         app.MapDelete("cache/clear", ClearCache).WithOpenApi().WithName(nameof(ClearCache));
     }
@@ -47,7 +50,14 @@ public static class Cache
             return TypedResults.BadRequest("Key must be provided.");
         }
         var db = connection.GetDatabase();
-        await db.StringSetAsync(key, req.Value);
+        try
+        {
+            await db.StringSetAsync(key, req.Value);
+        }
+        catch (RedisServerException e) when (e.Message.Contains("NOPERM"))
+        {
+            return TypedResults.Unauthorized();
+        }
         return Results.NoContent();
     }
 
@@ -57,5 +67,3 @@ public static class Cache
         return TypedResults.NoContent();
     }
 }
-
-public record AddCacheRequest(string Key, string Value);

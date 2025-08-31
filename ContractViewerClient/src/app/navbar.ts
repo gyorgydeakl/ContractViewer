@@ -4,11 +4,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import type { MenuItem } from 'primeng/api';
-import {CacheEditor} from './cache-editor/cache-editor';
+import {CacheViewer} from './cache-viewer/cache-viewer';
 
 @Component({
   selector: 'app-navbar',
-  imports: [MenubarModule, ButtonModule, DialogModule, RouterLink, CacheEditor],
+  imports: [MenubarModule, ButtonModule, DialogModule, RouterLink, CacheViewer, CacheViewer],
   template: `
     <p-menubar
       [model]="items()"
@@ -25,25 +25,25 @@ import {CacheEditor} from './cache-editor/cache-editor';
 
       <ng-template #end>
         <p-button
-          label="Cache Editor"
+          label="View Cache"
           icon="pi pi-database"
-          (onClick)="openCacheEditor(true)"
+          (onClick)="openCacheViewer(true)"
           [rounded]="true"
         />
       </ng-template>
     </p-menubar>
 
     <p-dialog
-      header="Cache Editor"
+      header="Cache"
       [modal]="true"
       [draggable]="false"
       [resizable]="false"
       [visible]="cacheEditorOpen()"
-      (visibleChange)="openCacheEditor($event)"
+      (visibleChange)="openCacheViewer($event)"
       [style]="{ width: '70vw', maxWidth: '90%' }"
       [breakpoints]="{ '960px': '85vw', '640px': '95vw' }"
     >
-      <app-cache-editor #cacheEditor/>
+      <app-cache-viewer #cacheViewer/>
     </p-dialog>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,19 +53,20 @@ import {CacheEditor} from './cache-editor/cache-editor';
 })
 export class Navbar {
   readonly cacheEditorOpen = signal(false);
-  readonly cacheEditor = viewChild.required<CacheEditor>("cacheEditor");
+  readonly cacheViewer = viewChild.required<CacheViewer>("cacheViewer");
 
   readonly items = signal<MenuItem[]>([
     { label: 'Login', routerLink: '/login' },
     { label: 'Contracts', routerLink: '/contracts' },
     { label: 'Documents', routerLink: '/documents' },
+    { label: 'Cache Manager', routerLink: '/cache' },
     { label: 'POAs', routerLink: '/poas' },
   ]);
 
-  openCacheEditor(value: boolean) {
+  openCacheViewer(value: boolean) {
     this.cacheEditorOpen.set(value);
     if (value) {
-      this.cacheEditor().reload();
+      this.cacheViewer().reload();
     }
   }
 }

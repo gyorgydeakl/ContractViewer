@@ -1,0 +1,215 @@
+@if (cache.isLoading()) {
+  <div class="flex items-center justify-center py-10">
+    <p-progress-spinner aria-label="Loading cache"></p-progress-spinner>
+  </div>
+} @else if (!cache.hasValue()) {
+  <div class="flex flex-col items-center gap-4 py-8">
+    <p class="text-lg">Failed to fetch cache</p>
+    <div class="flex gap-2">
+      <p-button label="Retry" icon="pi pi-refresh" (onClick)="cache.reload()" />
+    </div>
+  </div>
+} @else {
+  <!-- Toast + confirm overlay -->
+  <p-confirmpopup />
+
+  <!-- Top actions -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+    <div class="flex items-center gap-2">
+      <p-button
+        label="Refresh"
+        icon="pi pi-refresh"
+        (onClick)="cache.reload()"
+        [outlined]="true"
+      />
+      <p-button
+        label="Clear All"
+        icon="pi pi-trash"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="confirmClear($event)"
+      />
+      <p-button
+        label="Add Item"
+        icon="pi pi-plus"
+        [outlined]="true"
+        (onClick)="openAddDialog()"
+      />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Tenant selector -->
+      <p-select
+        class="min-w-[18rem]"
+        [options]="tenantOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="tenant()"
+        (ngModelChange)="onTenantChange($event)"
+        [showClear]="false"
+        placeholder="Select tenant"
+        [style]="{ width: '18rem' }"
+      ></p-select>
+
+      <!-- Search -->
+      <p-iconfield iconPosition="left" class="min-w-[16rem]">
+        <p-inputicon class="pi pi-search"></p-inputicon>
+        <input
+          type="text"
+          pInputText
+          [placeholder]="'Search key or value…'"
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+        />
+      </p-iconfield>
+    </div>
+  </div>
+
+  <!-- Cache table -->
+  <p-table
+    [value]="filteredRows()"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[10,25,50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first}–{last} of {totalRecords}"
+    [tableStyle]="{ 'min-width': '40rem' }"
+  >
+    <ng-template #header>
+      <tr>
+        <th class="w-[28%]">Key</th>
+        <th>Value</th>
+        <th class="w-[1%]">Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-row>
+      <tr>
+        <!-- KEY (limited width, clickable) -->
+        <td class="align-top">
+          <div
+            class="max-w-[22rem] line-clamp-1 break-all cursor-pointer hover:underline decoration-dotted"
+            (click)="openViewer(row.key, 'Key')"
+            pTooltip="View as JSON"
+            tooltipPosition="top"
+          >
+            {{ row.key }}
+          </div>
+        </td>
+
+        <!-- VALUE (limited width, clickable) -->
+        <td class="align-top">
+          <div
+            class="max-w-[40rem] line-clamp-2 break-words cursor-pointer hover:underline decoration-dotted font-mono text-sm"
+            (click)="openViewer(row.value, 'Value')"
+            pTooltip="View as JSON"
+            tooltipPosition="top"
+          >
+            {{ row.value }}
+          </div>
+        </td>
+
+        <td class="align-top">
+          <div class="flex items-center gap-2">
+            <p-button
+              icon="pi pi-trash"
+              severity="danger"
+              [rounded]="true"
+              [text]="true"
+              aria-label="Delete"
+              (onClick)="confirmDelete($event, row.key)"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template #footer>
+      <tr>
+        <td colspan="3">
+          <span class="text-sm opacity-80">Total: {{ filteredRows().length }}</span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- JSON Viewer Dialog -->
+  <p-dialog
+    [header]="viewerTitle()"
+    [visible]="viewerOpen()"
+    (visibleChange)="viewerOpen.set($event)"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [breakpoints]="{ '1280px': '60vw', '960px': '75vw', '640px': '95vw' }"
+    [style]="{ width: '70vw' }"
+    appendTo="body"
+  >
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-sm opacity-70">
+        {{ viewerIsJson() ? 'JSON' : 'Raw text' }}
+      </span>
+      <p-button size="small" text icon="pi pi-copy" label="Copy" (onClick)="copyViewer()"></p-button>
+    </div>
+
+    <pre class="m-0 whitespace-pre-wrap break-words font-mono text-sm">{{ viewerContent() }}</pre>
+  </p-dialog>
+
+  <!-- Add Item Dialog -->
+  <p-dialog
+    header="Add Cache Item"
+    [visible]="addOpen()"
+    (visibleChange)="addOpen.set($event)"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [dismissableMask]="true"
+    [breakpoints]="{ '1280px': '40vw', '960px': '60vw', '640px': '95vw' }"
+    [style]="{ width: '36vw' }"
+    appendTo="body"
+  >
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm opacity-80">Key</label>
+        <input
+          type="text"
+          pInputText
+          [ngModel]="addKey()"
+          (ngModelChange)="addKey.set($event)"
+          placeholder="tenant:feature:entity:123"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <label class="text-sm opacity-80">Value</label>
+          <span class="text-xs opacity-70">Stored as string; JSON is allowed</span>
+        </div>
+        <textarea
+          pInputTextarea
+          [autoResize]="true"
+          rows="6"
+          class="font-mono text-sm"
+          [ngModel]="addValue()"
+          (ngModelChange)="addValue.set($event)"
+          placeholder='{"name":"Alice","age":42}'
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-2">
+        <p-button
+          label="Cancel"
+          [text]="true"
+          (onClick)="addOpen.set(false)"
+        />
+        <p-button
+          label="Save"
+          icon="pi pi-check"
+          [disabled]="!canSaveAdd()"
+          (onClick)="saveAdd()"
+        />
+      </div>
+    </div>
+  </p-dialog>
+}

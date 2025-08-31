@@ -2,6 +2,7 @@
 using StackExchange.Redis;
 
 namespace Common;
+public record AddCacheRequest(string Key, string Value);
 
 public sealed record RedisTenantContext(string Username, string Prefix)
 {

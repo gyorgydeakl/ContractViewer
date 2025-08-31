@@ -9,6 +9,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/accessTokenResponse.ts
+model/addCacheRequest.ts
 model/contractDetails.ts
 model/contractSummary.ts
 model/generateContractRequest.ts

@@ -18,6 +18,7 @@ public static class ContractViewer
     {
         // cache
         app.MapGet("cache", GetCache).WithOpenApi().WithName(nameof(GetCache));
+        app.MapPost("cache", AddCacheItem).WithOpenApi().WithName(nameof(AddCacheItem));
         app.MapDelete("cache/{key}", DeleteCacheItem).WithOpenApi().WithName(nameof(DeleteCacheItem));
         app.MapDelete("cache/clear", ClearCache).WithOpenApi().WithName(nameof(ClearCache));
 
@@ -61,7 +62,24 @@ public static class ContractViewer
 
         return Results.Ok(allEntries);
     }
-
+    private static async Task<IResult> AddCacheItem([FromBody] AddCacheRequest req, IConnectionMultiplexer connection)
+    {
+        var key = Uri.UnescapeDataString(req.Key);
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return TypedResults.BadRequest("Key must be provided.");
+        }
+        var db = connection.GetDatabase();
+        try
+        {
+            await db.StringSetAsync(key, req.Value);
+        }
+        catch (RedisServerException e) when (e.Message.Contains("NOPEMRM"))
+        {
+            return TypedResults.Unauthorized();
+        }
+        return Results.NoContent();
+    }
     private static async Task<IResult> DeleteCacheItem(string key, IConnectionMultiplexer connection)
     {
         key = Uri.UnescapeDataString(key);

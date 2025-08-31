@@ -1,4 +1,5 @@
 export * from './accessTokenResponse';
+export * from './addCacheRequest';
 export * from './contractDetails';
 export * from './contractSummary';
 export * from './generateContractRequest';

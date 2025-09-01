@@ -18,13 +18,14 @@ import { ContractViewerClient } from '../../contract-viewer-client';
 import {OtherServiceClient} from '../../other-service-client';
 import {Select} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
+import {CacheAdminClient} from '../../cache-admin-client';
 
 type KV = { key: string; value: string };
 interface Cache {
   [key: string]: string;
 }
 
-type TenantKey = 'contract viewer' | 'other service';
+type TenantKey = 'contract viewer' | 'other service' | 'admin';
 
 @Component({
   selector: 'app-cache-editor-tenant',
@@ -54,6 +55,7 @@ export class CacheManager {
 
   // Underlying API clients (per-tenant)
   private readonly cvClient = inject(ContractViewerClient);
+  private readonly adminClient = inject(CacheAdminClient);
   private readonly otherClient = inject(OtherServiceClient);
 
   // Tenant selection state
@@ -62,14 +64,20 @@ export class CacheManager {
 
   protected readonly tenantOptions = [
     { label: 'Contract Viewer', value: 'contract viewer' as TenantKey },
-    { label: 'Other Service',   value: 'other service'   as TenantKey }
+    { label: 'Other Service',  value: 'other service'   as TenantKey },
+    { label: 'Admin',  value: 'admin' as TenantKey },
   ];
 
   // Active client depends on tenant selection
   private readonly client = computed(() => {
-    return this.tenant() === 'contract viewer'
-      ? this.cvClient
-      : (this.otherClient ?? this.cvClient);
+    switch (this.tenant()) {
+      case 'other service':
+        return this.otherClient;
+      case 'admin':
+        return this.adminClient;
+      case 'contract viewer':
+        return this.cvClient;
+    }
   });
 
   // Data + UI state

@@ -12,6 +12,8 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
         <PackageReference Include="Scalar.AspNetCore" Version="2.6.9" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.58" />
+        <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="9.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.7" />
     </ItemGroup>
 
     <ItemGroup>

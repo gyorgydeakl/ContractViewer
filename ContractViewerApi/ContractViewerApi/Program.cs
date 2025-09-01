@@ -1,3 +1,4 @@
+ using System.Security.Claims;
  using Common;
  using ContractViewerApi;
  using Microsoft.AspNetCore.DataProtection;
@@ -54,7 +55,12 @@ builder.Services
         opt.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
     })
     .AddBearerToken(IdentityConstants.BearerScheme);
-
+builder.Services.AddStackExchangeRedisOutputCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisCache");
+    options.InstanceName = "contractViewerTenant:";
+});
+builder.Services.AddOutputCache();
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
 {
@@ -85,6 +91,7 @@ var app = builder.Build();
 app.UseCors("AllowAngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseOutputCache();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.MapAppEndpoints();

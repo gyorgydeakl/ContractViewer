@@ -6,6 +6,7 @@ $procs += Start-Process dotnet -ArgumentList 'run --project ".\ContractViewerApi
 $procs += Start-Process dotnet -ArgumentList 'run --project ".\ContractViewerApi\ContractDetailsApi\ContractDetailsApi.csproj"' -PassThru
 $procs += Start-Process dotnet -ArgumentList 'run --project ".\ContractViewerApi\ContractViewerApi\ContractViewerApi.csproj"' -PassThru
 $procs += Start-Process dotnet -ArgumentList 'run --project ".\ContractViewerApi\OtherServiceApi\OtherServiceApi.csproj"' -PassThru
+$procs += Start-Process dotnet -ArgumentList 'run --project ".\ContractViewerApi\CacheAdminApi\CacheAdminApi.csproj"' -PassThru
 
 Write-Host "Press 'q' to stop all processes."
 

@@ -59,8 +59,8 @@ export class Navbar {
     { label: 'Login', routerLink: '/login' },
     { label: 'Contracts', routerLink: '/contracts' },
     { label: 'Documents', routerLink: '/documents' },
-    { label: 'Cache Manager', routerLink: '/cache' },
     { label: 'POAs', routerLink: '/poas' },
+    { label: 'Cache Manager', routerLink: '/cache' },
   ]);
 
   openCacheViewer(value: boolean) {

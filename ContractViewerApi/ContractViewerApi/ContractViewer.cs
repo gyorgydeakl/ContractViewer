@@ -35,7 +35,17 @@ public static class ContractViewer
             .RequireAuthorization()
             .WithOpenApi()
             .WithName(nameof(GetContracts));
-        app.MapGet("contract/{contractId}", GetContract).WithOpenApi().WithName(nameof(GetContract));
+        app.MapGet("contract/{contractId}", GetContract)
+            .RequireAuthorization()
+            .WithOpenApi()
+            .CacheOutput(policy => policy
+                .AddPolicy<AllowAuthPerUserPolicy>()
+                .Expire(TimeSpan.FromHours(1))
+                .SetVaryByRouteValue("contractId")
+                .VaryByValue(ctx => new KeyValuePair<string, string>(
+                    "email",
+                    ctx.User.FindFirstValue(ClaimTypes.Email) ?? string.Empty)))
+            .WithName(nameof(GetContract));
         
         // documents
         app.MapPost("poas/generate", GeneratePoas).WithOpenApi().WithName(nameof(GeneratePoas));
@@ -74,7 +84,7 @@ public static class ContractViewer
         {
             await db.StringSetAsync(key, req.Value);
         }
-        catch (RedisServerException e) when (e.Message.Contains("NOPEMRM"))
+        catch (RedisServerException e) when (e.Message.Contains("NOPERM"))
         {
             return TypedResults.Unauthorized();
         }
@@ -147,9 +157,9 @@ public static class ContractViewer
         IConnectionMultiplexer redis, 
         RedisTenantContext tenantCtx)
     {
-        return redis.GetDatabase().TryGetDeserialized(
-            tenantCtx.CreateKey($"contract/{contractId}"),
-            () => clientFactory.GetClient(Apis.ContractDetails).GetAsync<ContractDetails>($"contract/{contractId}"));
+        Task<ContractDetails> GetDetails() => clientFactory.GetClient(Apis.ContractDetails).GetAsync<ContractDetails>($"contract/{contractId}");
+        return GetDetails();
+        // return redis.GetDatabase().TryGetDeserialized(tenantCtx.CreateKey($"contract/{contractId}"), (Func<Task<ContractDetails>>?)GetDetails);
     }
 
     private static async Task<PowerOfAttorneyDto[]> GeneratePoas(

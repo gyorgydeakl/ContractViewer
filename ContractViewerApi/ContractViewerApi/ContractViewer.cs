@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using NRedisStack.RedisStackCommands;
 using StackExchange.Redis;
 using UserApi;
 
@@ -151,15 +152,9 @@ public static class ContractViewer
         return TypedResults.Ok(contracts);
     }
 
-    private static Task<ContractDetails> GetContract(
-        string contractId,
-        IHttpClientFactory clientFactory,
-        IConnectionMultiplexer redis, 
-        RedisTenantContext tenantCtx)
+    private static Task<ContractDetails> GetContract(string contractId, IHttpClientFactory clientFactory)
     {
-        Task<ContractDetails> GetDetails() => clientFactory.GetClient(Apis.ContractDetails).GetAsync<ContractDetails>($"contract/{contractId}");
-        return GetDetails();
-        // return redis.GetDatabase().TryGetDeserialized(tenantCtx.CreateKey($"contract/{contractId}"), (Func<Task<ContractDetails>>?)GetDetails);
+        return clientFactory.GetClient(Apis.ContractDetails).GetAsync<ContractDetails>($"contract/{contractId}");
     }
 
     private static async Task<PowerOfAttorneyDto[]> GeneratePoas(

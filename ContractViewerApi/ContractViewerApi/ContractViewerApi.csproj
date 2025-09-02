@@ -10,6 +10,7 @@
         <PackageReference Include="Bogus" Version="35.6.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
+        <PackageReference Include="NRedisStack" Version="1.1.0" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.6.9" />
         <PackageReference Include="StackExchange.Redis" Version="2.8.58" />
         <PackageReference Include="Microsoft.AspNetCore.OutputCaching.StackExchangeRedis" Version="9.0.7" />

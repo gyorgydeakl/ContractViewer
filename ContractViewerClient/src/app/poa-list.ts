@@ -128,7 +128,7 @@ export class PoaList {
     const body: GeneratePoaRequest = {
       contractIds: contracts.map(c => c.contractId),
       userIds: users.map(u => u.id ?? ''),
-      count: 5
+      count: 15
     };
 
     this.client.generatePoas(body).subscribe({

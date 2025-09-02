@@ -12,7 +12,11 @@ A rendszer számos párhuzamosan futó processből áll:
 
 **Contract List API és Contract Details API:** Ez a 2 mini alkalmazás ugyanazt a db-t használják, ami szerződéseket tárol. Az előbbi egy olyan endpointot implementál, ami user ID alapján kilistázza az adott userhez tartozó szerződéseket, az utóbbival pedig egy adott szerződés részleteit lehet lekérdezni.
 
-**Document API:** Ez a mini alkalmazás egy olyan endpointot valósít meg, amivel több szerződés ID alapján lehet listázni az ezekhez tartozó dukomentumokat.
+**POAs API:** Ez a mini alkalmazás egy olyan endpointot valósít meg, amivel olyan meghatalmazásokat (power of attorney) lehet listázni, amik általam vagy számomra lettek kiadva
+
+**Other Service API:** Ez a mini alkalmazás demonstál egy másik olyan szolgáltatást, ami a contract viewer alkalmazás által írt és olvasott cache-t módosítja. A user felületet kap arra, hogy tetszőlegesen módosítsa a cache-t ezen a szolgáltatáson keresztül. Ennek a célja, hogy demonstráljuk a cache több tenantos működését.
+
+**Cache Admin API:** Hasonlóan a fentihez, ez az alkalmazás is egy olyan szolgáltatás, ami a cache-t írja és olvassa, azonban admin módban, így eléri a cache bármely kulcsát, amit más szolgáltatások hoztak létre.
 
 ## Főbb folyamatok
 A POC kipróbálásához be kell jelentkezni. Az előre definiált user-ek a `ContractViewerApi/UserApi/IdentitySeeder.Users.cs` file-ban találhatók. 
@@ -30,16 +34,17 @@ Ha a contractok nincsenek a cache-ben, de a user id igen, akkor az app ezt fogja
 
 Az adott user-hez lehet véletlenszerűen generálni szerődéseket, hogy könnyen fel lehessen tölteni adattal. Ehhez, a '+' gombra kell rányomnunk a szerződések listázásakor.
 
-## Dokumentumok
-A `/documents` oldalon lehet lekérdezni az adott felhasználó összes szerződéséhez tartozó dokumentumot.
+## Meghatalmazások
+A `/poas` oldalon lehet lekérdezni az adott felhasználó összes meghatalmazását. A jobb fenti dropdown-ban lehet kiválasztani, hogy az olyanokat lássunk, ahol a bejelenkezett user a meghatalmazó, vagy olyanokat, ahol a meghatalmazott. 
 
-A dokumentumokat szerződés id-k listája alapján lehet lekérdezni.
+A meghatalmazások cachelési logikája megegyezik a szeződésekével
 
-Ehhez a backend lekérdezi az összes szerződést, ami a bejelentkezett userhez tartozik, majd ezek alapján keres a dokumentumokban. A cache-elési logika itt is érvényes, tehát ha a contractok az adott userben már benne vannak a cache-ben akkor azt használja, ha nem, akkor a fent leírt módon jár el a rendszer.
+## Cache módosítása több service-el:
+A redis lehetővé teszi, hogy egyszerre több user használja, és ezeknek ne legyenek hozzáférései az egymás által rögzített adatokhoz, csak a sajátjaikhoz. Ez használható arra, hogy több backend service használja ugyanazt a cache-t, és ne férjenek hozzá egymás kulcsaihoz.
 
-A dokumentumok a lekérdezésük után szintén bekerülnek a cache-be.
+Ennek a demonstrálására a `/cache` oldalon lehet a cache tartalmát tetszőlegesen módosítani több service nevében. Jobb fent ki lehet választani, hogy melyik service nevében akarunk cselekedni. Ezek után a cache csak az adott service-nek megfelelő előtagú kulcsokat mutatja, és csak ilyen előtaggal enged felvenni kulcsokat. 
 
-Az adott user-hez dokumentumokat is lehet véletlenszerűen generálni. Ehhez, a '+' gombra kell rányomnunk a dokumentumok listázásakor.
+Az 'Admin' kiválasztásával teetszőlegesen bármely kulcsot lehet kezelni, illetve bármilyen formájú kulcsot fel lehet venni.
 
 # Megjegyzések
 Az alkalmazás mellékhatásként a gyökér mappában (windowson a C:\ mappában) létre fog hozni egy `shared-keys` nevű mappát. Ez szükséges ahhoz, hogy ugyanaz a token el legyen fogadva a központi API és a User API által is. Ezt a mappát az alkalmazás futtatása után szabadon törölhetjük

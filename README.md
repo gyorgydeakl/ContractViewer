@@ -2,9 +2,9 @@ Ez a demo egy POC arra, hogy egy redis vagy azzal kompatibilis cache használata
 # A szoftver indítása:
 ## Első futtatás előtt
 - Szükséges, hogy fusson egy Redis (vagy egyéb kompatibilis process) instance a localhost:6379-on és egy SQL Server instance.
-    - A redis futtatásához javaslom a docker-t, mindössze 1 parancs futtatásával el tudunk indítani egy instance-et.
+    - A redis futtatásához javaslom a docker-t. Egy előre bekonfigurált instance-et tudunk futtatni, ha az alábbi parancsot kiadjuk a gyökérmappában 
         ```powershell
-        docker run --name redis-poc -d -p 6379:6379 redis
+        docker compose up -d
         ```
         - Az, hogy milyen host-on keresse a cache-t (jelenleg localhost), az állítható a `ContractViewerApi/ContractViewerApi/appsettings.json` mappában a `ConnectionStrings` rész alatt.
     - Az SQL Server-hez pedig ajánlom a SQL Server Management Studio telepítését.

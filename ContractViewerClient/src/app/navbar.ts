@@ -58,7 +58,6 @@ export class Navbar {
   readonly items = signal<MenuItem[]>([
     { label: 'Login', routerLink: '/login' },
     { label: 'Contracts', routerLink: '/contracts' },
-    { label: 'Documents', routerLink: '/documents' },
     { label: 'POAs', routerLink: '/poas' },
     { label: 'Cache Manager', routerLink: '/cache' },
   ]);

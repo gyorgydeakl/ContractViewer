@@ -48,7 +48,7 @@ public static class ContractViewer
                     ctx.User.FindFirstValue(ClaimTypes.Email) ?? string.Empty)))
             .WithName(nameof(GetContract));
         
-        // documents
+        // poas
         app.MapPost("poas/generate", GeneratePoas).WithOpenApi().WithName(nameof(GeneratePoas));
         app.MapGet("poasGrantedByMe", GetPoasGrantedByMe).WithOpenApi().WithName(nameof(GetPoasGrantedByMe));
         app.MapGet("poasGrantedForMe", GetPoasGrantedForMe).WithOpenApi().WithName(nameof(GetPoasGrantedForMe));

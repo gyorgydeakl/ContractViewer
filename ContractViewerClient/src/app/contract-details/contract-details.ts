@@ -8,6 +8,8 @@ import {Card} from 'primeng/card';
 import {PrimeTemplate} from 'primeng/api';
 import {Tag} from 'primeng/tag';
 import {Message} from 'primeng/message';
+import {Button} from 'primeng/button';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-contract-details',
@@ -19,7 +21,9 @@ import {Message} from 'primeng/message';
     Card,
     PrimeTemplate,
     Tag,
-    Message
+    Message,
+    Button,
+    Tooltip
   ],
   templateUrl: './contract-details.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

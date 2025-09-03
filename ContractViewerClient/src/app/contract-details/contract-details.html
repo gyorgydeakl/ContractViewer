@@ -33,6 +33,16 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
+          <p-button
+            icon="pi pi-refresh"
+            text
+            size="small"
+            aria-label="Reload contract"
+            pTooltip="Reload"
+            tooltipPosition="bottom"
+            (onClick)="contract.reload()"
+          ></p-button>
+
           @if (c.role)               { <p-tag value="{{ c.role }}"></p-tag> }
           @if (c.insuranceType)      { <p-tag value="{{ c.insuranceType }}" severity="info"></p-tag> }
           @if (c.billingMethod)      { <p-tag value="{{ c.billingMethod }}" severity="contrast"></p-tag> }

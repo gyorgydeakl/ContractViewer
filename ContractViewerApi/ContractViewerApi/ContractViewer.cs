@@ -112,8 +112,8 @@ public static class ContractViewer
 
     private static Task<AccessTokenResponse> Login([FromBody] LoginRequest req, IHttpClientFactory clientFactory)
     {
-        return clientFactory.
-            GetClient(Apis.User)
+        return clientFactory
+            .GetClient(Apis.User)
             .PostAsync<LoginRequest, AccessTokenResponse>("login", new LoginRequest
             {
                 Email = req.Email,

@@ -1,4 +1,26 @@
-Ez a demo egy POC arra, hogy egy redis vagy azzal kompatibilis cache használata hogyan képzelhető el egy cég-specifikus rendszerben 
+Ez a demo egy POC arra, hogy egy Redis vagy azzal kompatibilis cache használata hogyan képzelhető el egy cég-specifikus rendszerben. 
+A demo bemutatja egyszerre a Redis, a Valkey és a KeyDB használatát.
+Redis
+    - ismét ingyenes az alap verzió + fizetni lehet felsőbbi tierekért
+    - sokan azt írják, hogy már nem annyira megbízható a cég, bármikor fizetőssé válhat ismét
+Redis forkok:
+KeyDB
+    - Snap Inc. (snapchat) tulajdonában
+    - Gyenge supportáltság
+    - nincs fizetős support.
+    - Git repo-n kevés megoldott issue (30/160 2 év alatt)
+    - utolsó verziót (6.3.4) 2023 október 30-án adták ki, azóta a fejlesztés vélhetően áll
+    - A két legfőbb hozzájáruló sem aktív már egy ideje
+    - JohnSully felhasználó közölte is az év elején, hogy elhagyja a projektet.
+Valkey
+    - Linux foundation áll mögötte
+    - GitHub oldaluk sokkal aktívabb, 
+    - Utolsó verzió 2025 Június
+    - Még nem képes ezekre:
+    - full multithreading
+    - multi-master
+    - FLASH
+
 # A szoftver indítása:
 ## Első futtatás előtt
 - Szükséges, hogy fusson egy Redis (vagy egyéb kompatibilis process) instance a localhost:6379-on és egy SQL Server instance.
@@ -19,7 +41,7 @@ Ez a demo egy POC arra, hogy egy redis vagy azzal kompatibilis cache használata
     ```
 
 ## Indítás
-A backend indításához a gyökérmappából kell futtatni az alábbi parancsot:
+A backend indításához először buildelni kell az egész solution-t, majd a gyökérmappából kell futtatni az alábbi parancsot:
 ```
 ./startbe.ps1
 ```

@@ -6,7 +6,7 @@ A rendszer számos párhuzamosan futó processből áll:
 
 **Client:** Ez a böngészőben futó Angular kliens, egy sima frontend
 
-**Contract Viewer API:** A kliens ezzel az apival kommunikál. Ez az api kommunikál a cache-el, illetve továbbítja a szükséges kéréseket a megfelelő API-nak. Habár az üzleti logika nem bonyolult, minden fontos logika a `ContractViewerApi/ContractViewerApi/ContractViewerEndpoints.cs` file-ban található.
+**Contract Viewer API:** A kliens ezzel az apival kommunikál. Ez az api kommunikál a cache-el, illetve továbbítja a szükséges kéréseket a megfelelő API-nak. Habár az üzleti logika nem bonyolult, minden fontos logika a `ContractViewerApi/ContractViewerApi/ContractViewer.cs` file-ban található.
 
 **User API:** Ez egy mini alkalmazás, ami a user management-ért felelős. Számon tart egy olyan adatbázist, ami a usereket tárolja. A 2 fő funkcionalitás, amit megvalósít a bejelentkezés (Bearer tokennel) és a user ID lekérése token alapján.
 
